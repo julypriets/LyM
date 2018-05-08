@@ -51,7 +51,7 @@ public interface Proyecto1Constants {
   /** RegularExpression Id. */
   int MARCACION = 24;
   /** RegularExpression Id. */
-  int IDX = 25;
+  int holi = 25;
   /** RegularExpression Id. */
   int num = 26;
   /** RegularExpression Id. */
@@ -64,8 +64,6 @@ public interface Proyecto1Constants {
   int LETRA = 30;
   /** RegularExpression Id. */
   int nombre = 31;
-  /** RegularExpression Id. */
-  int holi = 32;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -97,14 +95,13 @@ public interface Proyecto1Constants {
     "\"Deterministico\"",
     "\"capacidad\"",
     "\"marcacion_i\"",
-    "<IDX>",
+    "\"holi\"",
     "<num>",
     "<DIGIT>",
     "<LETRAMAY>",
     "<LETRAMIN>",
     "<LETRA>",
     "<nombre>",
-    "\"holi\"",
   };
 
 }

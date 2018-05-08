@@ -2,7 +2,10 @@
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
  */options{  static = true;}PARSER_BEGIN(Proyecto1)package uniandes.teolen.parserJavaCC.Proyecto1;
 
-public class Proyecto1{}PARSER_END(Proyecto1)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{ < PLUS : "+" >
+public class Proyecto1{	ArrayList < String > variables = new ArrayList<String>();
+	ArrayList < String > sitios = new ArrayList<String>();
+	ArrayList < String > transiciones = new ArrayList<String>();
+	 }PARSER_END(Proyecto1)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{ < PLUS : "+" >
 | < MINUS : "-" >
 | < MULTIPLY : "*" >
 | < DIVIDE : "/" >
@@ -22,37 +25,59 @@ public class Proyecto1{}PARSER_END(Proyecto1)SKIP :{  " "| "\r"| "\t"
 | < DETERMINISTICO : "Deterministico" >
 | < CAPACIDAD : "capacidad" >
 | < MARCACION : "marcacion_i" >
-}TOKEN :{ < IDX :  "reg1"| "reg2" | "reg3" |"reg4" >
-| < num : (< DIGIT >)+ >
+| < holi : "holi" >
+}TOKEN :{ < num : (< DIGIT >)+ >
 | < #DIGIT : [ "0"-"9" ] >
 | < #LETRAMAY : [ "A"-"Z" ] >
 | < #LETRAMIN : [ "a"-"z" ] >
 | < #LETRA : < LETRAMIN > | < LETRAMAY > >
 | < nombre : < LETRA > (< LETRA > | < num >)+ >
-| < holi : "holi" >}
+}
 void pRed():
-{}
+{
+  
+}
 {
   < P_RED ><nombre > (var())+ (sitio())+ (transicion())+ (arco())+ < FIN_RED > 
 }
 
 void var():
-{}
+{Token t1; Token t2;}
 {
  < VAR ><nombre ><IGUAL ><num >
 }
 
 
 void sitio():
-{}
+{Token t1; Token t2;}
 {
- <SITIO ><DOS_PUNTOS ><nombre ><CAPACIDAD ><DOS_PUNTOS ><IGUAL ><holi ><MARCACION ><DOS_PUNTOS ><IGUAL ><holi >
+  
+ <SITIO ><DOS_PUNTOS > (t1= < nombre >) <CAPACIDAD ><DOS_PUNTOS ><IGUAL >(< num >|<holi >)<MARCACION ><DOS_PUNTOS ><IGUAL ><holi >
+
+{
+  if(t1!=null)
+  {
+
+    boolean encontro = false;
+    for (String sitio: sitios)
+    {
+      if(sitio.equals(t1.image))
+      {
+        encontro = true;
+      }
+    }
+    if(!encontro)
+    {
+      sitios.add(t1);
+    }
+}
+}
 }
 
 void transicion():
-{}
+{Token t1; Token t2;}
 {
- (< TRANSICION >< nombre >)|(< TRANSICION ><AP >< nombre ><COMA >(< EXPONENCIAL >|<DETERMINISTICO >|<UNIFORME >)< COMA ><holi ><COMA ><holi ><CP >)
+ < TRANSICION >((< nombre >)|(< TRANSICION ><AP >< nombre ><COMA >(< EXPONENCIAL >|<DETERMINISTICO >|<UNIFORME >)< COMA ><holi ><COMA ><holi ><CP >))
 }
 void arco():
 {}
