@@ -31,9 +31,41 @@ public interface Proyecto1Constants {
   /** RegularExpression Id. */
   int FIN_RED = 14;
   /** RegularExpression Id. */
-  int CONSTANT = 15;
+  int DOS_PUNTOS = 15;
   /** RegularExpression Id. */
-  int DIGIT = 16;
+  int IGUAL = 16;
+  /** RegularExpression Id. */
+  int COMA = 17;
+  /** RegularExpression Id. */
+  int AP = 18;
+  /** RegularExpression Id. */
+  int CP = 19;
+  /** RegularExpression Id. */
+  int UNIFORME = 20;
+  /** RegularExpression Id. */
+  int EXPONENCIAL = 21;
+  /** RegularExpression Id. */
+  int DETERMINISTICO = 22;
+  /** RegularExpression Id. */
+  int CAPACIDAD = 23;
+  /** RegularExpression Id. */
+  int MARCACION = 24;
+  /** RegularExpression Id. */
+  int IDX = 25;
+  /** RegularExpression Id. */
+  int num = 26;
+  /** RegularExpression Id. */
+  int DIGIT = 27;
+  /** RegularExpression Id. */
+  int LETRAMAY = 28;
+  /** RegularExpression Id. */
+  int LETRAMIN = 29;
+  /** RegularExpression Id. */
+  int LETRA = 30;
+  /** RegularExpression Id. */
+  int nombre = 31;
+  /** RegularExpression Id. */
+  int holi = 32;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -45,21 +77,34 @@ public interface Proyecto1Constants {
     "\"\\r\"",
     "\"\\t\"",
     "\"\\n\"",
-    "\"PLUS\"",
-    "\"MINUS\"",
+    "\"+\"",
+    "\"-\"",
     "\"*\"",
     "\"/\"",
     "\"P_RED\"",
-    "\"VAR\"",
+    "\"VAR \"",
     "\"SITIO\"",
     "\"TRANSICION\"",
     "\"ARCO\"",
     "\"FIN_RED\"",
-    "<CONSTANT>",
-    "<DIGIT>",
-    "\";\"",
+    "\":\"",
+    "\"=\"",
+    "\",\"",
     "\"(\"",
     "\")\"",
+    "\"Uniforme\"",
+    "\"Exponencial\"",
+    "\"Deterministico\"",
+    "\"capacidad\"",
+    "\"marcacion_i\"",
+    "<IDX>",
+    "<num>",
+    "<DIGIT>",
+    "<LETRAMAY>",
+    "<LETRAMIN>",
+    "<LETRA>",
+    "<nombre>",
+    "\"holi\"",
   };
 
 }

@@ -2,20 +2,61 @@
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
  */options{  static = true;}PARSER_BEGIN(Proyecto1)package uniandes.teolen.parserJavaCC.Proyecto1;
 
-public class Proyecto1{}PARSER_END(Proyecto1)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{  < PLUS : "PLUS" >
-| < MINUS : "MINUS" >
+public class Proyecto1{}PARSER_END(Proyecto1)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{ < PLUS : "+" >
+| < MINUS : "-" >
 | < MULTIPLY : "*" >
 | < DIVIDE : "/" >
 | < P_RED : "P_RED" >
-| < VAR:  "VAR" >
+| < VAR:  "VAR " >
 | < SITIO : "SITIO" >
 | < TRANSICION : "TRANSICION" >
 | < ARCO : "ARCO" >
 | < FIN_RED : "FIN_RED" >
+| < DOS_PUNTOS : ":" >
+| < IGUAL : "=" >
+|< COMA : "," >
+| < AP : "(" >
+| < CP : ")" >
+| < UNIFORME : "Uniforme" >
+| < EXPONENCIAL : "Exponencial" >
+| < DETERMINISTICO : "Deterministico" >
+| < CAPACIDAD : "capacidad" >
+| < MARCACION : "marcacion_i" >
 }TOKEN :{ < IDX :  "reg1"| "reg2" | "reg3" |"reg4" >
 | < num : (< DIGIT >)+ >
 | < #DIGIT : [ "0"-"9" ] >
 | < #LETRAMAY : [ "A"-"Z" ] >
 | < #LETRAMIN : [ "a"-"z" ] >
 | < #LETRA : < LETRAMIN > | < LETRAMAY > >
-| < nombre : < LETRA > (< LETRA > | < num >)+ >}int one_line() :{}{  sum() ";"  {    return 0;  }| ";"  {    return 1;  }}void sum() :{}{  term()  (    (      < PLUS >    | < MINUS >    )    term()  )*}void term() :{}{  unary()  (    (      < MULTIPLY >    | < DIVIDE >    )    unary()  )*}void unary() :{}{  < MINUS > element()| element()}void element() :{}{  < CONSTANT >| "(" sum() ")"}
+| < nombre : < LETRA > (< LETRA > | < num >)+ >
+| < holi : "holi" >}
+void pRed():
+{}
+{
+  < P_RED ><nombre > (var())+ (sitio())+ (transicion())+ (arco())+ < FIN_RED > 
+}
+
+void var():
+{}
+{
+ < VAR ><nombre ><IGUAL ><num >
+}
+
+
+void sitio():
+{}
+{
+ <SITIO ><DOS_PUNTOS ><nombre ><CAPACIDAD ><DOS_PUNTOS ><IGUAL ><holi ><MARCACION ><DOS_PUNTOS ><IGUAL ><holi >
+}
+
+void transicion():
+{}
+{
+ (< TRANSICION >< nombre >)|(< TRANSICION ><AP >< nombre ><COMA >(< EXPONENCIAL >|<DETERMINISTICO >|<UNIFORME >)< COMA ><holi ><COMA ><holi ><CP >)
+}
+void arco():
+{}
+{
+< ARCO ><AP ><holi ><COMA ><holi ><COMA ><holi ><CP >
+}
+

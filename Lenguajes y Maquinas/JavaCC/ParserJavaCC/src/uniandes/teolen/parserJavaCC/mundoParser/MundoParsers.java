@@ -2,6 +2,7 @@ package uniandes.teolen.parserJavaCC.mundoParser;
 
 import java.util.*;
 
+import uniandes.teolen.parserJavaCC.Proyecto1.Proyecto1;
 import uniandes.teolen.parserJavaCC.myParser.ParserCAML;
 import uniandes.teolen.parserJavaCC.myParserDR.ParserDR;
 import uniandes.teolen.parserJavaCC.newParser.NuevoParser;
@@ -22,7 +23,7 @@ public class MundoParsers {
 	    parsers.add("ParserDR");
 	    parsers.add("JavaCC");
 	    parsers.add("Nuevo Parser");
-	    
+	    parsers.add("Proyecto1");
 	    currentParser =  0;
 
 	}
@@ -37,6 +38,10 @@ public class MundoParsers {
 	
 	public NuevoParser getNuevoParser(){
 		return new NuevoParser(System.in);
+	}
+	
+	public Proyecto1 getProyecto1() {
+		return new Proyecto1(System.in);
 	}
 	
 	public String getStringCurrentParser(){
@@ -94,6 +99,18 @@ public class MundoParsers {
 			nuevoParser.ReInit(new java.io.StringReader(texto));
 			try {
 		    	nuevoParser.one_line(); 
+		    	resp = new String("OK    \n");
+		    }catch (Exception e) {
+		        resp = new String ("Error de Sintaxis: "+e.getMessage());
+		     } catch (Error e) {
+		    	 resp = new String ("Error Lexico: "+e.getMessage());
+		     }
+		}
+		else if(parsers.get(currentParser).equals("Proyecto1")){
+			Proyecto1 proyecto1 = getProyecto1();
+			proyecto1.ReInit(new java.io.StringReader(texto));
+			try {
+		    	Proyecto1.one_line(); 
 		    	resp = new String("OK    \n");
 		    }catch (Exception e) {
 		        resp = new String ("Error de Sintaxis: "+e.getMessage());
