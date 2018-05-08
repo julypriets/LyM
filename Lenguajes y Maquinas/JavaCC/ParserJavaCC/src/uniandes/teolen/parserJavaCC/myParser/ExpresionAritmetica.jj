@@ -1,0 +1,47 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = false;}PARSER_BEGIN(ExpresionAritmetica)package uniandes.lym.parser.expresiones;
+
+public class ExpresionAritmetica{  }PARSER_END(ExpresionAritmetica)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{  < PLUS : "+" >| < MINUS : "-" >| < MULTIPLY : "*" >| < DIVIDE : "/" >
+| < AP : "(" >
+| < CP : ")" >}TOKEN :{  < NUM : (< DIGIT >)+ >
+| < NOM: < LETRA > (< LETRA > | < DIGIT >)* >  | < #DIGIT : [ "0"-"9" ] >
+| < #LETRAMIN : [ "a"-"z" ] >
+| < #LETRAMAY : [ "A"-"Z" ] >
+| < #LETRA : < LETRAMIN > | < LETRAMAY > >}
+void expresion():
+{
+}
+{
+  p_op()( (< PLUS > | < MINUS>) p_op() )*
+}
+
+
+void p_op():
+{
+}
+{
+	u_op() ( (< MULTIPLY > | < DIVIDE> ) u_op() )*
+}  
+  
+void u_op():
+{
+}
+{
+		  < AP > expresion() < CP > | (< MINUS >)?  < NUM >| < NOM > 
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
