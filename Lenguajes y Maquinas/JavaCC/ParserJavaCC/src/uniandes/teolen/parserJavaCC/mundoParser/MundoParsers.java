@@ -110,7 +110,7 @@ public class MundoParsers {
 			Proyecto1 proyecto1 = getProyecto1();
 			proyecto1.ReInit(new java.io.StringReader(texto));
 			try {
-		    	Proyecto1.one_line(); 
+		    	proyecto1.pRed(); 
 		    	resp = new String("OK    \n");
 		    }catch (Exception e) {
 		        resp = new String ("Error de Sintaxis: "+e.getMessage());

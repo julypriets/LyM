@@ -11,59 +11,59 @@ public interface Proyecto1Constants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int PLUS = 5;
+  int PLUS = 4;
   /** RegularExpression Id. */
-  int MINUS = 6;
+  int MINUS = 5;
   /** RegularExpression Id. */
-  int MULTIPLY = 7;
+  int MULTIPLY = 6;
   /** RegularExpression Id. */
-  int DIVIDE = 8;
+  int DIVIDE = 7;
   /** RegularExpression Id. */
-  int P_RED = 9;
+  int P_RED = 8;
   /** RegularExpression Id. */
-  int VAR = 10;
+  int VAR = 9;
   /** RegularExpression Id. */
-  int SITIO = 11;
+  int SITIO = 10;
   /** RegularExpression Id. */
-  int TRANSICION = 12;
+  int TRANSICION = 11;
   /** RegularExpression Id. */
-  int ARCO = 13;
+  int ARCO = 12;
   /** RegularExpression Id. */
-  int FIN_RED = 14;
+  int FIN_RED = 13;
   /** RegularExpression Id. */
-  int DOS_PUNTOS = 15;
+  int DOS_PUNTOS = 14;
   /** RegularExpression Id. */
-  int IGUAL = 16;
+  int IGUAL = 15;
   /** RegularExpression Id. */
-  int COMA = 17;
+  int COMA = 16;
   /** RegularExpression Id. */
-  int AP = 18;
+  int AP = 17;
   /** RegularExpression Id. */
-  int CP = 19;
+  int CP = 18;
   /** RegularExpression Id. */
-  int UNIFORME = 20;
+  int UNIFORME = 19;
   /** RegularExpression Id. */
-  int EXPONENCIAL = 21;
+  int EXPONENCIAL = 20;
   /** RegularExpression Id. */
-  int DETERMINISTICO = 22;
+  int DETERMINISTICO = 21;
   /** RegularExpression Id. */
-  int CAPACIDAD = 23;
+  int CAPACIDAD = 22;
   /** RegularExpression Id. */
-  int MARCACION = 24;
+  int MARCACION = 23;
   /** RegularExpression Id. */
-  int holi = 25;
+  int holi = 24;
   /** RegularExpression Id. */
-  int num = 26;
+  int num = 25;
   /** RegularExpression Id. */
-  int DIGIT = 27;
+  int DIGIT = 26;
   /** RegularExpression Id. */
-  int LETRAMAY = 28;
+  int LETRAMAY = 27;
   /** RegularExpression Id. */
-  int LETRAMIN = 29;
+  int LETRAMIN = 28;
   /** RegularExpression Id. */
-  int LETRA = 30;
+  int LETRA = 29;
   /** RegularExpression Id. */
-  int nombre = 31;
+  int nombre = 30;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -71,7 +71,6 @@ public interface Proyecto1Constants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
-    "\" \"",
     "\"\\r\"",
     "\"\\t\"",
     "\"\\n\"",
@@ -80,13 +79,13 @@ public interface Proyecto1Constants {
     "\"*\"",
     "\"/\"",
     "\"P_RED\"",
-    "\"VAR \"",
+    "\"VAR\"",
     "\"SITIO\"",
     "\"TRANSICION\"",
     "\"ARCO\"",
     "\"FIN_RED\"",
     "\":\"",
-    "\"=\"",
+    "\" = \"",
     "\",\"",
     "\"(\"",
     "\")\"",

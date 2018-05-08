@@ -1,22 +1,21 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
- */options{  static = true;}PARSER_BEGIN(Proyecto1)package uniandes.teolen.parserJavaCC.Proyecto1;
-
+ */options{  static = false;}PARSER_BEGIN(Proyecto1)package uniandes.teolen.parserJavaCC.Proyecto1;
+import java.util.*;
 public class Proyecto1{	ArrayList < String > variables = new ArrayList<String>();
 	ArrayList < String > sitios = new ArrayList<String>();
-	ArrayList < String > transiciones = new ArrayList<String>();
-	 }PARSER_END(Proyecto1)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{ < PLUS : "+" >
+	ArrayList < String > transiciones = new ArrayList<String>();}PARSER_END(Proyecto1)SKIP :{  //" " "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{ < PLUS : "+" >
 | < MINUS : "-" >
 | < MULTIPLY : "*" >
 | < DIVIDE : "/" >
 | < P_RED : "P_RED" >
-| < VAR:  "VAR " >
+| < VAR:  "VAR" >
 | < SITIO : "SITIO" >
 | < TRANSICION : "TRANSICION" >
 | < ARCO : "ARCO" >
 | < FIN_RED : "FIN_RED" >
 | < DOS_PUNTOS : ":" >
-| < IGUAL : "=" >
+| < IGUAL : " = " >
 |< COMA : "," >
 | < AP : "(" >
 | < CP : ")" >
@@ -32,13 +31,14 @@ public class Proyecto1{	ArrayList < String > variables = new ArrayList<String>
 | < #LETRAMIN : [ "a"-"z" ] >
 | < #LETRA : < LETRAMIN > | < LETRAMAY > >
 | < nombre : < LETRA > (< LETRA > | < num >)+ >
-}
+}
+
 void pRed():
 {
   
 }
 {
-  < P_RED ><nombre > (var())+ (sitio())+ (transicion())+ (arco())+ < FIN_RED > 
+  < P_RED ><nombre > (var())+ (sitio())+ (transicion())+ (arco())+ < FIN_RED >
 }
 
 void var():
