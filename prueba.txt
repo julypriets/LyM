@@ -1,0 +1,47 @@
+P_RED nombreEjemplo
+VAR X = 5
+VAR Y = 6
+VAR P = 1
+VAR Inf = 10000
+
+SITIO: ColaDeEspera
+capacidad:= Inf
+marcacion_i:=0
+SITIO : Procesadores
+capacidad:=P+P
+marcacion_i:=capacidad
+SITIO : Trabajando1
+capacidad:=1
+marcacion_i:=0
+SITIO : Trabajando2
+capacidad:=2
+marcacion_i:=0
+SITIO : Conteo
+capacidad:=Inf
+marcacion_i:=0
+
+TRANSICION (Entrar, Exponencial, X/3, (X+4)/3)
+
+TRANSICION Atender1
+TRANSICION Atender2
+
+TRANSICION(Terminar1, Deterministico, Y+(-Y/2))
+TRANSICION(Terminar2, Uniforme, 1, 3)
+
+ARCO(Entrando: Entrar, ColaDeEspera)
+ARCO(ColaDeEspera, Atender1, 1)
+ARCO(Procesadores, Atender1)
+
+ARCO(ColaDeEspera, Atender2, 1)
+ARCO(Procesadores, Atender2, 2)
+
+ARCO(Trabajando2, Terminar2, 1)
+ARCO(Trabajando1, Terminar1, 1)
+
+ARCO(Terminar1, Procesadores, 1)
+ARCO(Terminar2, Procesadores, 1)
+
+ARCO(Terminar1, Conteo, 1)
+ARCO(Terminar2, Conteo, 2*P)
+
+FIN_RED
