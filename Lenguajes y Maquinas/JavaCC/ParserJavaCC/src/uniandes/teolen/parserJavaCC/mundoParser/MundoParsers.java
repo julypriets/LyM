@@ -2,6 +2,7 @@ package uniandes.teolen.parserJavaCC.mundoParser;
 
 import java.util.*;
 
+import uniandes.teolen.parserJavaCC.ParserProlog.ParserProlog;
 import uniandes.teolen.parserJavaCC.Proyecto1.Proyecto1;
 import uniandes.teolen.parserJavaCC.myParser.ParserCAML;
 import uniandes.teolen.parserJavaCC.myParserDR.ParserDR;
@@ -24,6 +25,7 @@ public class MundoParsers {
 	    parsers.add("JavaCC");
 	    parsers.add("Nuevo Parser");
 	    parsers.add("Proyecto1");
+	    parsers.add("ParserProlog");
 	    currentParser =  0;
 
 	}
@@ -42,6 +44,10 @@ public class MundoParsers {
 	
 	public Proyecto1 getProyecto1() {
 		return new Proyecto1(System.in);
+	}
+	
+	public ParserProlog getParserProlog(){
+		return new ParserProlog(System.in);
 	}
 	
 	public String getStringCurrentParser(){
@@ -119,6 +125,18 @@ public class MundoParsers {
 		     }
 		}
 
+		else if(parsers.get(currentParser).equals("ParserProlog")){
+			ParserProlog parserProlog = getParserProlog();
+			parserProlog.ReInit(new java.io.StringReader(texto));
+			try {
+		    	parserProlog.hr(); 
+		    	resp = new String("OK    \n");
+		    }catch (Exception e) {
+		        resp = new String ("Error de Sintaxis: "+e.getMessage());
+		     } catch (Error e) {
+		    	 resp = new String ("Error Lexico: "+e.getMessage());
+		     }
+		}
 		return "\n SISTEMA " + parsers.get(currentParser) + ": " + resp + "\n";
 	}
 

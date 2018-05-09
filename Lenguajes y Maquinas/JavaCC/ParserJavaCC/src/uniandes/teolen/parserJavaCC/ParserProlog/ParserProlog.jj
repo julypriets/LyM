@@ -6,6 +6,7 @@ options {
   IGNORE_CASE = false;
   STATIC = false;
 }
+
 PARSER_BEGIN(ParserProlog)
 package uniandes.teolen.parserJavaCC.ParserProlog;
 

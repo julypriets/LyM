@@ -1,71 +1,80 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
  */options{
-  IGNORE_CASE = false;  static = false;}PARSER_BEGIN(Proyecto1)package uniandes.teolen.parserJavaCC.Proyecto1;
+  IGNORE_CASE = false;  STATIC = false;}PARSER_BEGIN(Proyecto1)package uniandes.teolen.parserJavaCC.Proyecto1;
 import java.util.*;
 public class Proyecto1{	ArrayList < String > variables = new ArrayList<String>();
 	ArrayList < String > sitios = new ArrayList<String>();
-	ArrayList < String > transiciones = new ArrayList<String>();}PARSER_END(Proyecto1)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{ < PLUS : "+" >
+	ArrayList < String > transiciones = new ArrayList<String>();}PARSER_END(Proyecto1)SKIP :
+{
+ 	" " | "\r" | "\t" | "\n"
+
+}TOKEN : /* OPERATORS */{ < PLUS : "+" >
 | < MINUS : "-" >
 | < MULTIPLY : "*" >
 | < DIVIDE : "/" >
 | < DOS_PUNTOS : ":" >
-| < IGUAL : "=" >
-|< COMA : "," >
+| < IGUAL: "=" >
+| < COMA : "," >
 | < AP : "(" >
 | < CP : ")" >
-}TOKEN :{ < num : (< DIGIT >)+ >
-| < #DIGIT : [ "0"-"9" ] >
-| < #LETRAMAY : [ "A"-"Z" ] >
-| < #LETRAMIN : [ "a"-"z" ] >
-| < #LETRA : < LETRAMIN > | < LETRAMAY > >
 | < VAR:  "VAR" >
 | < UNIFORME : "Uniforme" >
 | < EXPONENCIAL : "Exponencial" >
 | < DETERMINISTICO : "Deterministico" >
 | < CAPACIDAD : "capacidad" >
 | < MARCACION : "marcacion_i" >
-| < ENTRANDO : "Entrando:" >
+| < ENTRANDO : "Entrando" >
 | < holi : "holi" >
 | < ARCO : "ARCO" >
 | < TRANSICION : "TRANSICION" >
 | < SITIO : "SITIO" >
-| < nombre : < LETRA > (< LETRA > | < num >)+ >
 | < P_RED : "P_RED" >
-| < FIN_RED : "FIN_RED" >
+| < FIN_RED : "FIN_RED" >}TOKEN :{
+ < #DIGIT : [ "0"-"9" ] >| < num : (< DIGIT >)+ >
+| < #LETRAMAY : [ "A"-"Z" ] >
+| < #LETRAMIN : [ "a"-"z" ] >
+| < #LETRA : (< LETRAMIN > | < LETRAMAY >) >
+//| < NOMBRE : < LETRA > (< LETRA > | < num >)* >
+| < NOMBRE: (["A"-"z"])+(["0"-"9"])*>
 }
 
-void pRed():
+void pRed() throws Error:
+{ } 
 {
-  
-}
-{
-  < P_RED ><nombre > (var())+ (sitio())+ (transicion())+ (arco())+ < FIN_RED >
+  < P_RED ><NOMBRE >
+  (var())*
+  (sitio())*
+  (transicion())*
+  (arco())*
+  < FIN_RED >
 }
 
-void var(): 
+void var() throws Error:
 {Token t1;}
 {
- < VAR > (t1=<nombre >)
+ < VAR >(t1=<NOMBRE >)<IGUAL ><num >
 {
    boolean encontrado = false; 
    for(int i = 0; i<variables.size() && !encontrado; i++) {
      if(variables.get(i).equals(t1.image)) {
-       encontrado = true; 
-   }
+      encontrado = true; 
+ }
    if(encontrado) { throw new Error("La variable ya se encontraba declarada previamente :c"); }
    else {  variables.add(t1.image); }
    }
 }
 
- (<IGUAL >)(<num >)
+
 }
+ 
+
 
 
 void sitio():
 {Token t1; Token v; String variable;}
 {
-  <SITIO ><DOS_PUNTOS > (t1= < nombre >)
+  <SITIO ><DOS_PUNTOS > (t1= < NOMBRE >)
  {
    boolean encontrado = false; 
    for(int i = 0; i<sitios.size() && !encontrado; i++) {
@@ -86,7 +95,9 @@ void sitio():
 void transicion():
 {Token t; Token t1;}
 {
- < TRANSICION >((t = < nombre >
+ < TRANSICION >
+
+ (((t = < NOMBRE >)
  {
     //Solo crea transiciones si no existen antes. 
    boolean encontrado1 = false; 
@@ -97,7 +108,13 @@ void transicion():
    if(encontrado1) { throw new Error("La transicion ya se encontraba declarada previamente :c"); }
    else { transiciones.add(t.image); }
    }  
- })|(< TRANSICION ><AP >(t1 = < nombre >
+ }
+ )
+
+ |
+
+
+ (<AP>(t1 = < NOMBRE >)
  {
    //Solo crea transiciones si no existen antes. 
    boolean encontrado = false; 
@@ -108,7 +125,12 @@ void transicion():
    if(encontrado) { throw new Error("La transicion ya se encontraba declarada previamente :c"); }
    else { transiciones.add(t1.image); }
    }  
- })<COMA >(< EXPONENCIAL ><COMA > dobleParametro() |<DETERMINISTICO ><COMA >parametro()|<UNIFORME ><COMA >dobleParametro())<CP >))
+ }
+ <COMA >
+ ((< EXPONENCIAL ><COMA > dobleParametro()) |(<DETERMINISTICO ><COMA >parametro())|(<UNIFORME ><COMA >dobleParametro()))
+ <CP >
+ )
+)
 }
 
 void dobleParametro():
@@ -120,56 +142,32 @@ void dobleParametro():
 void parametro():
 {}
 {
-  (< num >|verificarVar())|fact()
+  exp()
 }
 void arco():
 {}
 {
-< ARCO ><AP >(arcoEntrando()|arco2())
+< ARCO ><AP >
+//(LOOKAHEAD(2)
+(arcoEntrando()| arco2())< CP >
 }
 
 void arcoEntrando():
-{Token t1; Token t2; }
+{Token t1; Token t2; Token t3;}
 {
-  < ENTRANDO >
-  (t1 = < nombre >)
+  
+  t3=< NOMBRE >< DOS_PUNTOS > t1 = < NOMBRE >< COMA >t2 = < NOMBRE >
 {
-      boolean encontrado1 = false; 
-   for(int i = 0; i<transiciones.size() && !encontrado1; i++) {
-     if(variables.get(i).equals(t1.image)) {
-       encontrado1 = true; 
-   }
-   if(!encontrado1) { throw new Error("La variable no existe :'v"); }
-   }
- }
-
- < COMA >(t2 = < nombre >)
-
-   {
-      boolean encontrado = false; 
-   for(int i = 0; i<transiciones.size() && !encontrado; i++) {
-     if(variables.get(i).equals(t2.image)) {
-       encontrado = true; 
-   }
-   if(!encontrado) { throw new Error("La variable no existe :'v"); }
-   }
- }
-}
-
-void arco2():
-{Token t1; Token t2;}
-{
-  (t1 = < nombre >)< COMA >(t2 = < nombre >)(< CP >|(< COMA >(< num >(< PLUS >|< MINUS >|< MULTIPLY >|< DIVIDE >)< nombre >)< CP >))
-  {
-
-    int p1=0;
-    int p2=0;
+    Boolean sitio1 = false;
+    Boolean sitio2 = false;
+    Boolean transicion1 = false;
+    Boolean transicion2 = false;
     
       boolean encontrado1 = false; 
    for(int i = 0; i<transiciones.size() && !encontrado1; i++) {
      if(transiciones.get(i).equals(t1.image)) {
        encontrado1 = true;
-       p1=1; 
+       transicion1=true; 
    }
    if(!encontrado1) { throw new Error("La variable no existe :'v"); }
    }
@@ -177,7 +175,7 @@ void arco2():
    for(int i = 0; i<sitios.size() && !encontrado1; i++) {
      if(sitios.get(i).equals(t1.image)) {
        encontrado1 = true;
-       p1=2; 
+       sitio1=true; 
    }
    if(!encontrado1) { throw new Error("La variable no existe :'v"); }
  }
@@ -186,7 +184,7 @@ void arco2():
    for(int i = 0; i<transiciones.size() && !encontrado2; i++) {
      if(transiciones.get(i).equals(t2.image)) {
        encontrado2 = true;
-       p2=1; 
+       transicion2=true; 
    }
    if(!encontrado2) { throw new Error("La variable no existe :'v"); }
    }
@@ -194,12 +192,67 @@ void arco2():
    for(int i = 0; i<sitios.size() && !encontrado2; i++) {
      if(sitios.get(i).equals(t2.image)) {
        encontrado2 = true;
-       p2=2;
+       sitio2=true;
    }
    if(!encontrado2) { throw new Error("La variable no existe :'v"); }
  }
 
- if(p1==p2)
+
+ if((sitio1&&sitio2)||(transicion1&&transicion2))
+ {
+throw new Error("No puede haber arcos entre dos elementos del mismo tipo.");
+ } 
+ }
+}
+
+void arco2():
+{Token t1; Token t2;}
+{
+  t1 = < NOMBRE >< COMA >t2 = < NOMBRE >(< COMA >parametro())?
+  //< num >((< PLUS >|< MINUS >|< MULTIPLY >|< DIVIDE >)< NOMBRE >)?)?
+  {
+
+    Boolean sitio1 = false;
+    Boolean sitio2 = false;
+    Boolean transicion1 = false;
+    Boolean transicion2 = false;
+    
+      boolean encontrado1 = false; 
+   for(int i = 0; i<transiciones.size() && !encontrado1; i++) {
+     if(transiciones.get(i).equals(t1.image)) {
+       encontrado1 = true;
+       transicion1=true; 
+   }
+   if(!encontrado1) { throw new Error("La variable no existe :'v"); }
+   }
+
+   for(int i = 0; i<sitios.size() && !encontrado1; i++) {
+     if(sitios.get(i).equals(t1.image)) {
+       encontrado1 = true;
+       sitio1=true; 
+   }
+   if(!encontrado1) { throw new Error("La variable no existe :'v"); }
+ }
+
+ boolean encontrado2 = false; 
+   for(int i = 0; i<transiciones.size() && !encontrado2; i++) {
+     if(transiciones.get(i).equals(t2.image)) {
+       encontrado2 = true;
+       transicion2=true; 
+   }
+   if(!encontrado2) { throw new Error("La variable no existe :'v"); }
+   }
+
+   for(int i = 0; i<sitios.size() && !encontrado2; i++) {
+     if(sitios.get(i).equals(t2.image)) {
+       encontrado2 = true;
+       sitio2=true;
+   }
+   if(!encontrado2) { throw new Error("La variable no existe :'v"); }
+ }
+
+
+ if((sitio1&&sitio2)||(transicion1&&transicion2))
  {
 throw new Error("No puede haber arcos entre dos elementos del mismo tipo.");
  } 
@@ -209,7 +262,7 @@ throw new Error("No puede haber arcos entre dos elementos del mismo tipo.");
 void verificarVar():
 {Token t;}
 {
-	(t = < nombre >)
+	(t = < NOMBRE >)
 {
     //Si la variable no existe, sale un error
   boolean encontrado = false; 
@@ -225,36 +278,19 @@ void verificarVar():
 
 void exp() :
 {}
-{
-// Parses  E -> E + T
-//         E -> E - T
-//         E -> T
-//   in EBNF:  E -> T {+ T   | - T }
-  
+{  
  term() ( < PLUS > term() | < MINUS > term() )*
 }
-
-void term() :
+void term():
 {}
-{
-// Parses  T -> T * F
-//         T -> T / F
-//         T -> F
-//   in EBNF:  T -> F {* F   | /  F }
-  
+{  
  fact() ( < MULTIPLY > fact() | < DIVIDE > fact() )*
 }
 
 void fact() :
+{}
 {
-// Parses  F -> B
-//         F -> -B
-//         B -> num
-//         B -> '(' E ')'
-//   in EBNF:  F -> [-](num |'(' E ')')
-}
-{
-    (< MINUS >)? ((< num >|verificarVar()) "(" exp() ")")
+    (< MINUS >)? ((< num > | verificarVar())| "(" exp() ")")
 }
 
 //No se hacen excepciones sino es error.

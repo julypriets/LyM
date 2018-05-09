@@ -29,43 +29,43 @@ public interface Proyecto1Constants {
   /** RegularExpression Id. */
   int CP = 13;
   /** RegularExpression Id. */
-  int num = 14;
+  int VAR = 14;
   /** RegularExpression Id. */
-  int DIGIT = 15;
+  int UNIFORME = 15;
   /** RegularExpression Id. */
-  int LETRAMAY = 16;
+  int EXPONENCIAL = 16;
   /** RegularExpression Id. */
-  int LETRAMIN = 17;
+  int DETERMINISTICO = 17;
   /** RegularExpression Id. */
-  int LETRA = 18;
+  int CAPACIDAD = 18;
   /** RegularExpression Id. */
-  int VAR = 19;
+  int MARCACION = 19;
   /** RegularExpression Id. */
-  int UNIFORME = 20;
+  int ENTRANDO = 20;
   /** RegularExpression Id. */
-  int EXPONENCIAL = 21;
+  int holi = 21;
   /** RegularExpression Id. */
-  int DETERMINISTICO = 22;
+  int ARCO = 22;
   /** RegularExpression Id. */
-  int CAPACIDAD = 23;
+  int TRANSICION = 23;
   /** RegularExpression Id. */
-  int MARCACION = 24;
+  int SITIO = 24;
   /** RegularExpression Id. */
-  int ENTRANDO = 25;
+  int P_RED = 25;
   /** RegularExpression Id. */
-  int holi = 26;
+  int FIN_RED = 26;
   /** RegularExpression Id. */
-  int ARCO = 27;
+  int DIGIT = 27;
   /** RegularExpression Id. */
-  int TRANSICION = 28;
+  int num = 28;
   /** RegularExpression Id. */
-  int SITIO = 29;
+  int LETRAMAY = 29;
   /** RegularExpression Id. */
-  int nombre = 30;
+  int LETRAMIN = 30;
   /** RegularExpression Id. */
-  int P_RED = 31;
+  int LETRA = 31;
   /** RegularExpression Id. */
-  int FIN_RED = 32;
+  int NOMBRE = 32;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -86,25 +86,25 @@ public interface Proyecto1Constants {
     "\",\"",
     "\"(\"",
     "\")\"",
-    "<num>",
-    "<DIGIT>",
-    "<LETRAMAY>",
-    "<LETRAMIN>",
-    "<LETRA>",
     "\"VAR\"",
     "\"Uniforme\"",
     "\"Exponencial\"",
     "\"Deterministico\"",
     "\"capacidad\"",
     "\"marcacion_i\"",
-    "\"Entrando:\"",
+    "\"Entrando\"",
     "\"holi\"",
     "\"ARCO\"",
     "\"TRANSICION\"",
     "\"SITIO\"",
-    "<nombre>",
     "\"P_RED\"",
     "\"FIN_RED\"",
+    "<DIGIT>",
+    "<num>",
+    "<LETRAMAY>",
+    "<LETRAMIN>",
+    "<LETRA>",
+    "<NOMBRE>",
   };
 
 }
