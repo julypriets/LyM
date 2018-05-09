@@ -97,13 +97,39 @@ public class Proyecto1 implements Proyecto1Constants {
       jj_consume_token(num);
       break;
     case nombre:
-      v = jj_consume_token(nombre);
-  if(variables.get(v.image)==null) {
-    {if (true) throw new Error ("La variable dada no existe");}
-  } else { variable = v.image; }
+      verificarVar();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+      case MINUS:
+      case MULTIPLY:
+      case DIVIDE:
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case PLUS:
+          jj_consume_token(PLUS);
+          break;
+        case MINUS:
+          jj_consume_token(MINUS);
+          break;
+        case MULTIPLY:
+          jj_consume_token(MULTIPLY);
+          break;
+        case DIVIDE:
+          jj_consume_token(DIVIDE);
+          break;
+        default:
+          jj_la1[4] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+        verificarVar();
+        break;
+      default:
+        jj_la1[5] = jj_gen;
+        ;
+      }
       break;
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[6] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -118,7 +144,7 @@ public class Proyecto1 implements Proyecto1Constants {
       jj_consume_token(CAPACIDAD);
       break;
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[7] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -131,12 +157,12 @@ public class Proyecto1 implements Proyecto1Constants {
     case nombre:
       t = jj_consume_token(nombre);
     //Solo crea transiciones si no existen antes. 
-   boolean encontrado = false;
-   for(int i = 0; i<transiciones.size() && !encontrado; i++) {
+   boolean encontrado1 = false;
+   for(int i = 0; i<transiciones.size() && !encontrado1; i++) {
      if(transiciones.get(i).equals(t.image)) {
-       encontrado = true;
+       encontrado1 = true;
    }
-   if(encontrado) { {if (true) throw new Error("La transicion ya se encontraba declarada previamente :c");} }
+   if(encontrado1) { {if (true) throw new Error("La transicion ya se encontraba declarada previamente :c");} }
    else { transiciones.add(t.image); }
    }
       break;
@@ -171,14 +197,14 @@ public class Proyecto1 implements Proyecto1Constants {
         dobleParametro();
         break;
       default:
-        jj_la1[6] = jj_gen;
+        jj_la1[8] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       jj_consume_token(CP);
       break;
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[9] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -202,17 +228,16 @@ public class Proyecto1 implements Proyecto1Constants {
         verificarVar();
         break;
       default:
-        jj_la1[8] = jj_gen;
+        jj_la1[10] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       break;
     case MINUS:
-    case VAR:
       fact();
       break;
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[11] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -221,12 +246,120 @@ public class Proyecto1 implements Proyecto1Constants {
   final public void arco() throws ParseException {
     jj_consume_token(ARCO);
     jj_consume_token(AP);
-    jj_consume_token(holi);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case ENTRANDO:
+      arcoEntrando();
+      break;
+    case nombre:
+      arco2();
+      break;
+    default:
+      jj_la1[12] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void arcoEntrando() throws ParseException {
+ Token t1; Token t2;
+    jj_consume_token(ENTRANDO);
+    t1 = jj_consume_token(nombre);
+      boolean encontrado1 = false;
+   for(int i = 0; i<transiciones.size() && !encontrado1; i++) {
+     if(variables.get(i).equals(t1.image)) {
+       encontrado1 = true;
+   }
+   if(!encontrado1) { {if (true) throw new Error("La variable no existe :'v");} }
+   }
     jj_consume_token(COMA);
-    jj_consume_token(holi);
+    t2 = jj_consume_token(nombre);
+      boolean encontrado = false;
+   for(int i = 0; i<transiciones.size() && !encontrado; i++) {
+     if(variables.get(i).equals(t2.image)) {
+       encontrado = true;
+   }
+   if(!encontrado) { {if (true) throw new Error("La variable no existe :'v");} }
+   }
+  }
+
+  final public void arco2() throws ParseException {
+ Token t1; Token t2;
+    t1 = jj_consume_token(nombre);
     jj_consume_token(COMA);
-    jj_consume_token(holi);
-    jj_consume_token(CP);
+    t2 = jj_consume_token(nombre);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case CP:
+      jj_consume_token(CP);
+      break;
+    case COMA:
+      jj_consume_token(COMA);
+      jj_consume_token(num);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+        jj_consume_token(PLUS);
+        break;
+      case MINUS:
+        jj_consume_token(MINUS);
+        break;
+      case MULTIPLY:
+        jj_consume_token(MULTIPLY);
+        break;
+      case DIVIDE:
+        jj_consume_token(DIVIDE);
+        break;
+      default:
+        jj_la1[13] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      jj_consume_token(nombre);
+      break;
+    default:
+      jj_la1[14] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    int p1=0;
+    int p2=0;
+
+      boolean encontrado1 = false;
+   for(int i = 0; i<transiciones.size() && !encontrado1; i++) {
+     if(transiciones.get(i).equals(t1.image)) {
+       encontrado1 = true;
+       p1=1;
+   }
+   if(!encontrado1) { {if (true) throw new Error("La variable no existe :'v");} }
+   }
+
+   for(int i = 0; i<sitios.size() && !encontrado1; i++) {
+     if(sitios.get(i).equals(t1.image)) {
+       encontrado1 = true;
+       p1=2;
+   }
+   if(!encontrado1) { {if (true) throw new Error("La variable no existe :'v");} }
+ }
+
+ boolean encontrado2 = false;
+   for(int i = 0; i<transiciones.size() && !encontrado2; i++) {
+     if(transiciones.get(i).equals(t2.image)) {
+       encontrado2 = true;
+       p2=1;
+   }
+   if(!encontrado2) { {if (true) throw new Error("La variable no existe :'v");} }
+   }
+
+   for(int i = 0; i<sitios.size() && !encontrado2; i++) {
+     if(sitios.get(i).equals(t2.image)) {
+       encontrado2 = true;
+       p2=2;
+   }
+   if(!encontrado2) { {if (true) throw new Error("La variable no existe :'v");} }
+ }
+
+ if(p1==p2)
+ {
+{if (true) throw new Error("No puede haber arcos entre dos elementos del mismo tipo.");}
+ }
   }
 
   final public void verificarVar() throws ParseException {
@@ -235,7 +368,7 @@ public class Proyecto1 implements Proyecto1Constants {
     //Si la variable no existe, sale un error
   boolean encontrado = false;
    for(int i = 0; i<variables.size() && !encontrado; i++) {
-     if(variables.get(i).equals(t2.image)) {
+     if(variables.get(i).equals(t.image)) {
        encontrado = true;
    }
    if(!encontrado) { {if (true) throw new Error("La variable no existe :'v");} }
@@ -252,7 +385,7 @@ public class Proyecto1 implements Proyecto1Constants {
         ;
         break;
       default:
-        jj_la1[10] = jj_gen;
+        jj_la1[15] = jj_gen;
         break label_5;
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -265,7 +398,7 @@ public class Proyecto1 implements Proyecto1Constants {
         term();
         break;
       default:
-        jj_la1[11] = jj_gen;
+        jj_la1[16] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -282,7 +415,7 @@ public class Proyecto1 implements Proyecto1Constants {
         ;
         break;
       default:
-        jj_la1[12] = jj_gen;
+        jj_la1[17] = jj_gen;
         break label_6;
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -295,7 +428,7 @@ public class Proyecto1 implements Proyecto1Constants {
         fact();
         break;
       default:
-        jj_la1[13] = jj_gen;
+        jj_la1[18] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -308,18 +441,18 @@ public class Proyecto1 implements Proyecto1Constants {
       jj_consume_token(MINUS);
       break;
     default:
-      jj_la1[14] = jj_gen;
+      jj_la1[19] = jj_gen;
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case num:
       jj_consume_token(num);
       break;
-    case VAR:
-      var();
+    case nombre:
+      verificarVar();
       break;
     default:
-      jj_la1[15] = jj_gen;
+      jj_la1[20] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -337,13 +470,18 @@ public class Proyecto1 implements Proyecto1Constants {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[16];
+  final private int[] jj_la1 = new int[21];
   static private int[] jj_la1_0;
+  static private int[] jj_la1_1;
   static {
       jj_la1_init_0();
+      jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x4000000,0x10000000,0x20000000,0x40000000,0x42000,0x402000,0x380000,0x20040000,0x42000,0x4042020,0x30,0x30,0xc0,0xc0,0x20,0x4002000,};
+      jj_la1_0 = new int[] {0x200000,0x1000000,0x800000,0x400000,0x1e0,0x1e0,0x42000000,0x2020000,0x1c000,0x40800000,0x42000000,0x42000040,0x40080000,0x1e0,0x2800,0x60,0x60,0x180,0x180,0x40,0x42000000,};
+   }
+   private static void jj_la1_init_1() {
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -357,7 +495,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -371,7 +509,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -381,7 +519,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -391,7 +529,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -400,7 +538,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -409,7 +547,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -460,21 +598,24 @@ public class Proyecto1 implements Proyecto1Constants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[32];
+    boolean[] la1tokens = new boolean[33];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 21; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
             la1tokens[j] = true;
           }
+          if ((jj_la1_1[i] & (1<<j)) != 0) {
+            la1tokens[32+j] = true;
+          }
         }
       }
     }
-    for (int i = 0; i < 32; i++) {
+    for (int i = 0; i < 33; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

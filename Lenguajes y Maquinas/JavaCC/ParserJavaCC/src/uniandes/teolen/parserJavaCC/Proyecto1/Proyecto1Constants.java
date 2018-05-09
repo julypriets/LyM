@@ -11,61 +11,61 @@ public interface Proyecto1Constants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int PLUS = 4;
+  int PLUS = 5;
   /** RegularExpression Id. */
-  int MINUS = 5;
+  int MINUS = 6;
   /** RegularExpression Id. */
-  int MULTIPLY = 6;
+  int MULTIPLY = 7;
   /** RegularExpression Id. */
-  int DIVIDE = 7;
+  int DIVIDE = 8;
   /** RegularExpression Id. */
-  int DOS_PUNTOS = 8;
+  int DOS_PUNTOS = 9;
   /** RegularExpression Id. */
-  int IGUAL = 9;
+  int IGUAL = 10;
   /** RegularExpression Id. */
-  int COMA = 10;
+  int COMA = 11;
   /** RegularExpression Id. */
-  int AP = 11;
+  int AP = 12;
   /** RegularExpression Id. */
-  int CP = 12;
+  int CP = 13;
   /** RegularExpression Id. */
-  int num = 13;
+  int UNIFORME = 14;
   /** RegularExpression Id. */
-  int DIGIT = 14;
+  int EXPONENCIAL = 15;
   /** RegularExpression Id. */
-  int LETRAMAY = 15;
+  int DETERMINISTICO = 16;
   /** RegularExpression Id. */
-  int LETRAMIN = 16;
+  int CAPACIDAD = 17;
   /** RegularExpression Id. */
-  int LETRA = 17;
+  int MARCACION = 18;
   /** RegularExpression Id. */
-  int nombre = 18;
+  int ENTRANDO = 19;
   /** RegularExpression Id. */
-  int UNIFORME = 19;
+  int holi = 20;
   /** RegularExpression Id. */
-  int EXPONENCIAL = 20;
+  int VAR = 21;
   /** RegularExpression Id. */
-  int DETERMINISTICO = 21;
+  int ARCO = 22;
   /** RegularExpression Id. */
-  int CAPACIDAD = 22;
+  int TRANSICION = 23;
   /** RegularExpression Id. */
-  int MARCACION = 23;
+  int SITIO = 24;
   /** RegularExpression Id. */
-  int holi = 24;
+  int num = 25;
   /** RegularExpression Id. */
-  int P_RED = 25;
+  int DIGIT = 26;
   /** RegularExpression Id. */
-  int VAR = 26;
+  int LETRAMAY = 27;
   /** RegularExpression Id. */
-  int VARIABLE = 27;
+  int LETRAMIN = 28;
   /** RegularExpression Id. */
-  int SITIO = 28;
+  int LETRA = 29;
   /** RegularExpression Id. */
-  int TRANSICION = 29;
+  int nombre = 30;
   /** RegularExpression Id. */
-  int ARCO = 30;
+  int P_RED = 31;
   /** RegularExpression Id. */
-  int FIN_RED = 31;
+  int FIN_RED = 32;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -73,6 +73,7 @@ public interface Proyecto1Constants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
+    "\" \"",
     "\"\\r\"",
     "\"\\t\"",
     "\"\\n\"",
@@ -81,28 +82,28 @@ public interface Proyecto1Constants {
     "\"*\"",
     "\"/\"",
     "\":\"",
-    "\" = \"",
+    "\"=\"",
     "\",\"",
     "\"(\"",
     "\")\"",
+    "\"Uniforme\"",
+    "\"Exponencial\"",
+    "\"Deterministico\"",
+    "\"capacidad\"",
+    "\"marcacion_i\"",
+    "\"Entrando:\"",
+    "\"holi\"",
+    "\"VAR\"",
+    "\"ARCO\"",
+    "\"TRANSICION\"",
+    "\"SITIO\"",
     "<num>",
     "<DIGIT>",
     "<LETRAMAY>",
     "<LETRAMIN>",
     "<LETRA>",
     "<nombre>",
-    "\"Uniforme\"",
-    "\"Exponencial\"",
-    "\"Deterministico\"",
-    "\"capacidad\"",
-    "\"marcacion_i\"",
-    "\"holi\"",
     "\"P_RED\"",
-    "\"VAR\"",
-    "<VARIABLE>",
-    "\"SITIO\"",
-    "\"TRANSICION\"",
-    "\"ARCO\"",
     "\"FIN_RED\"",
   };
 

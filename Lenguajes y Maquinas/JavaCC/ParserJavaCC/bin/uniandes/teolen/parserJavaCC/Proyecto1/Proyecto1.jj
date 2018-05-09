@@ -4,34 +4,33 @@
 import java.util.*;
 public class Proyecto1{	ArrayList < String > variables = new ArrayList<String>();
 	ArrayList < String > sitios = new ArrayList<String>();
-	ArrayList < String > transiciones = new ArrayList<String>();}PARSER_END(Proyecto1)SKIP :{  //" " "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{ < PLUS : "+" >
+	ArrayList < String > transiciones = new ArrayList<String>();}PARSER_END(Proyecto1)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{ < PLUS : "+" >
 | < MINUS : "-" >
 | < MULTIPLY : "*" >
 | < DIVIDE : "/" >
 | < DOS_PUNTOS : ":" >
-| < IGUAL : " = " >
+| < IGUAL : "=" >
 |< COMA : "," >
 | < AP : "(" >
 | < CP : ")" >
-
+| < UNIFORME : "Uniforme" >
+| < EXPONENCIAL : "Exponencial" >
+| < DETERMINISTICO : "Deterministico" >
+| < CAPACIDAD : "capacidad" >
+| < MARCACION : "marcacion_i" >
+| < ENTRANDO : "Entrando:" >
+| < holi : "holi" >
+| < VAR:  "VAR" >
+| < ARCO : "ARCO" >
+| < TRANSICION : "TRANSICION" >
+| < SITIO : "SITIO" >
 }TOKEN :{ < num : (< DIGIT >)+ >
 | < #DIGIT : [ "0"-"9" ] >
 | < #LETRAMAY : [ "A"-"Z" ] >
 | < #LETRAMIN : [ "a"-"z" ] >
 | < #LETRA : < LETRAMIN > | < LETRAMAY > >
 | < nombre : < LETRA > (< LETRA > | < num >)+ >
-| < UNIFORME : "Uniforme" >
-| < EXPONENCIAL : "Exponencial" >
-| < DETERMINISTICO : "Deterministico" >
-| < CAPACIDAD : "capacidad" >
-| < MARCACION : "marcacion_i" >
-| < holi : "holi" >
 | < P_RED : "P_RED" >
-| < VAR:  "VAR" >
-| < VARIABLE: (< LETRA >)* | < num > >
-| < SITIO : "SITIO" >
-| < TRANSICION : "TRANSICION" >
-| < ARCO : "ARCO" >
 | < FIN_RED : "FIN_RED" >
 }
 
@@ -75,13 +74,9 @@ void sitio():
    else { sitios.add(t1.image); }
    }
 }
- <CAPACIDAD ><DOS_PUNTOS ><IGUAL >(< num >| (v = < nombre >)
+ <CAPACIDAD ><DOS_PUNTOS ><IGUAL >(< num >| ((verificarVar())((< PLUS >|< MINUS >|< MULTIPLY >|< DIVIDE >)(verificarVar()))?)
 
-{
-  if(variables.get(v.image)==null) {
-    throw new Error ("La variable dada no existe"); 
-  } else { variable = v.image; }
-}
+
 )<MARCACION ><DOS_PUNTOS ><IGUAL >(<num >|< CAPACIDAD >) 
 }
 
@@ -92,12 +87,12 @@ void transicion():
  < TRANSICION >((t = < nombre >
  {
     //Solo crea transiciones si no existen antes. 
-   boolean encontrado = false; 
-   for(int i = 0; i<transiciones.size() && !encontrado; i++) {
+   boolean encontrado1 = false; 
+   for(int i = 0; i<transiciones.size() && !encontrado1; i++) {
      if(transiciones.get(i).equals(t.image)) {
-       encontrado = true; 
+       encontrado1 = true; 
    }
-   if(encontrado) { throw new Error("La transicion ya se encontraba declarada previamente :c"); }
+   if(encontrado1) { throw new Error("La transicion ya se encontraba declarada previamente :c"); }
    else { transiciones.add(t.image); }
    }  
  })|(< TRANSICION ><AP >(t1 = < nombre >
@@ -128,7 +123,85 @@ void parametro():
 void arco():
 {}
 {
-< ARCO ><AP ><holi ><COMA ><holi ><COMA ><holi ><CP >
+< ARCO ><AP >(arcoEntrando()|arco2())
+}
+
+void arcoEntrando():
+{Token t1; Token t2; }
+{
+  < ENTRANDO >
+  (t1 = < nombre >)
+{
+      boolean encontrado1 = false; 
+   for(int i = 0; i<transiciones.size() && !encontrado1; i++) {
+     if(variables.get(i).equals(t1.image)) {
+       encontrado1 = true; 
+   }
+   if(!encontrado1) { throw new Error("La variable no existe :'v"); }
+   }
+ }
+
+ < COMA >(t2 = < nombre >)
+
+   {
+      boolean encontrado = false; 
+   for(int i = 0; i<transiciones.size() && !encontrado; i++) {
+     if(variables.get(i).equals(t2.image)) {
+       encontrado = true; 
+   }
+   if(!encontrado) { throw new Error("La variable no existe :'v"); }
+   }
+ }
+}
+
+void arco2():
+{Token t1; Token t2;}
+{
+  (t1 = < nombre >)< COMA >(t2 = < nombre >)(< CP >|(< COMA >(< num >(< PLUS >|< MINUS >|< MULTIPLY >|< DIVIDE >)< nombre >)))
+  {
+
+    int p1=0;
+    int p2=0;
+    
+      boolean encontrado1 = false; 
+   for(int i = 0; i<transiciones.size() && !encontrado1; i++) {
+     if(transiciones.get(i).equals(t1.image)) {
+       encontrado1 = true;
+       p1=1; 
+   }
+   if(!encontrado1) { throw new Error("La variable no existe :'v"); }
+   }
+
+   for(int i = 0; i<sitios.size() && !encontrado1; i++) {
+     if(sitios.get(i).equals(t1.image)) {
+       encontrado1 = true;
+       p1=2; 
+   }
+   if(!encontrado1) { throw new Error("La variable no existe :'v"); }
+ }
+
+ boolean encontrado2 = false; 
+   for(int i = 0; i<transiciones.size() && !encontrado2; i++) {
+     if(transiciones.get(i).equals(t2.image)) {
+       encontrado2 = true;
+       p2=1; 
+   }
+   if(!encontrado2) { throw new Error("La variable no existe :'v"); }
+   }
+
+   for(int i = 0; i<sitios.size() && !encontrado2; i++) {
+     if(sitios.get(i).equals(t2.image)) {
+       encontrado2 = true;
+       p2=2;
+   }
+   if(!encontrado2) { throw new Error("La variable no existe :'v"); }
+ }
+
+ if(p1==p2)
+ {
+throw new Error("No puede haber arcos entre dos elementos del mismo tipo.");
+ } 
+}
 }
 
 void verificarVar():
@@ -139,7 +212,7 @@ void verificarVar():
     //Si la variable no existe, sale un error
   boolean encontrado = false; 
    for(int i = 0; i<variables.size() && !encontrado; i++) {
-     if(variables.get(i).equals(t2.image)) {
+     if(variables.get(i).equals(t.image)) {
        encontrado = true; 
    }
    if(!encontrado) { throw new Error("La variable no existe :'v"); }
@@ -179,7 +252,7 @@ void fact() :
 //   in EBNF:  F -> [-](num |'(' E ')')
 }
 {
-    (< MINUS >)? ((< num >|var()) "(" exp() ")")
+    (< MINUS >)? ((< num >|verificarVar()) "(" exp() ")")
 }
 
 //No se hacen excepciones sino es error.

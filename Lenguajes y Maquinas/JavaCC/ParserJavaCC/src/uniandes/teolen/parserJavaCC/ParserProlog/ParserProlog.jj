@@ -1,0 +1,182 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  IGNORE_CASE = false;
+  STATIC = false;
+}
+PARSER_BEGIN(ParserProlog)
+package uniandes.teolen.parserJavaCC.ParserProlog;
+
+import java.util.*;
+ 
+public class ParserProlog {
+	ArrayList< String > sitios = new ArrayList< String >();
+	ArrayList<String> transiciones = new ArrayList< String >();
+	ArrayList< String > variables = new ArrayList< String >();
+} 
+
+PARSER_END(ParserProlog)
+
+SKIP :
+{
+ 	" " | "\r" | "\t" | "\n"
+
+}
+TOKEN : /* OPERADORES */
+{
+ < ASIGNAR : ":=" >
+| < DECLARAR : "=" >
+| < MINUS : "-">
+| < OPERACION : "+"|< MINUS >|"*"|"/" >
+}
+
+TOKEN : /* CONSTANTES */
+{
+< COMIENZO : "P_RED" >
+| < CIERRE : "FIN_RED" >
+| < VARIABLE : "VAR"> 
+| < SITIO : "SITIO">
+| < CAPACIDAD : "capacidad" >
+| < MARCACION : "marcacion_i" >
+| < TRANSICION : "TRANSICION">
+| < UNIOEXP : "Uniforme"|"Exponencial">
+| < DET : "Deterministico">
+| < ARC : "ARCO">
+| < #DIGIT : ["0"-"9"] >
+| < NUMERO : (< DIGIT >)+ >
+| < PALABRA: (["A"-"z"])+(["0"-"9"])*>
+}
+
+void variable() throws Exception:
+{
+}
+{
+
+	< VARIABLE >< PALABRA > < DECLARAR > < NUMERO >
+
+}
+
+void operacion() throws Exception:
+{
+ Token var1 = null; Token var2 = null;
+}
+{
+  ((< MINUS >)? (< NUMERO >|var1 = < PALABRA >)) (< OPERACION > (< NUMERO >|var2 = < PALABRA >| "("operacion()")"))* | "("operacion()")" (< OPERACION > operacion())? 
+
+ 	{
+ 	  if(var1!=null) {
+ 	    boolean encontre = false;
+	    for(String var: variables) {
+	      if(var.equals(var1.image)) {
+	        encontre = true;
+	      }
+	    }
+	    if(!encontre) {
+	      throw new Exception("La variable " + var1.image + " nunca fue inicializada.");
+	    }
+ 	  }
+ 	  if(var2!=null) {
+ 	    boolean encontre = false;
+	    for(String var: variables) {
+	      if(var.equals(var2.image)) {
+	        encontre = true;
+	      }
+	    }
+	    if(!encontre) {
+	      throw new Exception("La variable " + var2.image + " nunca fue inicializada.");
+	    }
+ 	  }
+	}
+}
+
+void sitio() throws Exception:
+{
+  Token sitio;
+}
+{
+  < SITIO >":"sitio =< PALABRA >
+  < CAPACIDAD >< ASIGNAR >(operacion())
+  < MARCACION >< ASIGNAR >((operacion())|< CAPACIDAD >)
+
+	{
+		sitios.add(sitio.image);
+	}
+}
+
+void transicion() throws Exception:
+{
+  Token nom1 = null; Token nom2 = null;
+}
+{
+  < TRANSICION >(nom1 = < PALABRA >|"("nom2 = <PALABRA> "," ( <UNIOEXP>","operacion()","operacion()|< DET >","operacion())")")
+
+  {
+     if(nom1 != null) {
+	  transiciones.add(nom1.image);
+    }
+    else if(nom2 != null) {
+	  transiciones.add(nom2.image);
+    }
+  }
+
+}
+
+
+void arco() throws Exception:
+{
+  Token param1; Token param2 = null; Token param3;
+}
+{
+  < ARC > "(" param1=< PALABRA >(":" param2 = < PALABRA > )?"," param3 = < PALABRA > ("," operacion())? ")"
+  {
+
+    Token elPrimeroEs = param1;
+    if(param2 != null) {
+      elPrimeroEs = param2;
+    }
+
+    boolean esSitio1 = false;
+    boolean esSitio2 = false;
+    boolean esTrans1 = false;
+    boolean esTrans2 = false;
+    
+    for(String sitio:sitios) {
+      if(sitio.equals(elPrimeroEs.image)) {
+        esSitio1 = true;
+      }
+      if(sitio.equals(param3.image)) {
+        esSitio2 = true;
+      }
+    }
+    System.out.println(elPrimeroEs.image + " " + param3.image);
+    for(String trans:transiciones) {
+      if(trans.equals(elPrimeroEs.image)) {
+        esTrans1 = true;
+      }
+      if(trans.equals(param3.image)) {
+        esTrans2 = true;
+      }
+    }
+
+    if(esSitio1 && esSitio2) {
+      throw new Exception("No puede haber un arco entre dos sitios.");
+    }
+    else if(esTrans1 && esTrans2) {
+      throw new Exception("No puede haber un arco entre dos transiciones.");
+    }
+
+  }
+}
+
+void hr() throws Exception:
+{}
+{
+  < COMIENZO >< PALABRA >
+  (variable())*
+  (sitio())*
+  (transicion())*
+  (arco())*
+  < CIERRE >
+}
