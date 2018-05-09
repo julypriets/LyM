@@ -8,29 +8,31 @@ public class Proyecto1{	ArrayList < String > variables = new ArrayList<String>
 | < MINUS : "-" >
 | < MULTIPLY : "*" >
 | < DIVIDE : "/" >
-| < P_RED : "P_RED" >
-| < VAR:  "VAR" >
-| < SITIO : "SITIO" >
-| < TRANSICION : "TRANSICION" >
-| < ARCO : "ARCO" >
-| < FIN_RED : "FIN_RED" >
 | < DOS_PUNTOS : ":" >
 | < IGUAL : " = " >
 |< COMA : "," >
 | < AP : "(" >
 | < CP : ")" >
-| < UNIFORME : "Uniforme" >
-| < EXPONENCIAL : "Exponencial" >
-| < DETERMINISTICO : "Deterministico" >
-| < CAPACIDAD : "capacidad" >
-| < MARCACION : "marcacion_i" >
-| < holi : "holi" >
+
 }TOKEN :{ < num : (< DIGIT >)+ >
 | < #DIGIT : [ "0"-"9" ] >
 | < #LETRAMAY : [ "A"-"Z" ] >
 | < #LETRAMIN : [ "a"-"z" ] >
 | < #LETRA : < LETRAMIN > | < LETRAMAY > >
 | < nombre : < LETRA > (< LETRA > | < num >)+ >
+| < UNIFORME : "Uniforme" >
+| < EXPONENCIAL : "Exponencial" >
+| < DETERMINISTICO : "Deterministico" >
+| < CAPACIDAD : "capacidad" >
+| < MARCACION : "marcacion_i" >
+| < holi : "holi" >
+| < P_RED : "P_RED" >
+| < VAR:  "VAR" >
+| < VARIABLE: (< LETRA >)* | < num > >
+| < SITIO : "SITIO" >
+| < TRANSICION : "TRANSICION" >
+| < ARCO : "ARCO" >
+| < FIN_RED : "FIN_RED" >
 }
 
 void pRed():
@@ -41,47 +43,159 @@ void pRed():
   < P_RED ><nombre > (var())+ (sitio())+ (transicion())+ (arco())+ < FIN_RED >
 }
 
-void var():
-{Token t1; Token t2;}
+void var(): 
+{Token t1;}
 {
- < VAR ><nombre ><IGUAL ><num >
+ < VAR >(t1 = <nombre >)
+ {
+   boolean encontrado = false; 
+   for(int i = 0; i<variables.size() && !encontrado; i++) {
+     if(variables.get(i).equals(t1.image)) {
+       encontrado = true; 
+   }
+   if(encontrado) { throw new Error("La variable ya se encontraba declarada previamente :c"); }
+   else {  variables.add(t1.image); }
+   }
+}
+ <IGUAL ><num >
 }
 
 
 void sitio():
-{Token t1; Token t2;}
+{Token t1; Token v; String variable;}
 {
-  
- <SITIO ><DOS_PUNTOS > (t1= < nombre >) <CAPACIDAD ><DOS_PUNTOS ><IGUAL >(< num >|<holi >)<MARCACION ><DOS_PUNTOS ><IGUAL ><holi >
+  <SITIO ><DOS_PUNTOS > (t1= < nombre >)
+ {
+   boolean encontrado = false; 
+   for(int i = 0; i<sitios.size() && !encontrado; i++) {
+     if(sitios.get(i).equals(t1.image)) {
+       encontrado = true; 
+   }
+   if(encontrado) { throw new Error("El sitio ya se encontraba declarada previamente :c"); }
+   else { sitios.add(t1.image); }
+   }
+}
+ <CAPACIDAD ><DOS_PUNTOS ><IGUAL >(< num >| (v = < nombre >)
 
 {
-  if(t1!=null)
-  {
+  if(variables.get(v.image)==null) {
+    throw new Error ("La variable dada no existe"); 
+  } else { variable = v.image; }
+}
+)<MARCACION ><DOS_PUNTOS ><IGUAL >(<num >|< CAPACIDAD >) 
+}
 
-    boolean encontro = false;
-    for (String sitio: sitios)
-    {
-      if(sitio.equals(t1.image))
-      {
-        encontro = true;
-      }
-    }
-    if(!encontro)
-    {
-      sitios.add(t1);
-    }
-}
-}
-}
 
 void transicion():
-{Token t1; Token t2;}
+{Token t1;}
 {
- < TRANSICION >((< nombre >)|(< TRANSICION ><AP >< nombre ><COMA >(< EXPONENCIAL >|<DETERMINISTICO >|<UNIFORME >)< COMA ><holi ><COMA ><holi ><CP >))
+ < TRANSICION >((< nombre >)|(< TRANSICION ><AP >(t1 = < nombre >
+ {
+   //Solo crea transiciones si no existen antes. 
+   boolean encontrado = false; 
+   for(int i = 0; i<transiciones.size() && !encontrado; i++) {
+     if(transiciones.get(i).equals(t1.image)) {
+       encontrado = true; 
+   }
+   if(encontrado) { throw new Error("La transicion ya se encontraba declarada previamente :c"); }
+   else { transiciones.add(t1.image); }
+   }  
+ })<COMA >(< EXPONENCIAL ><COMA > RGSTDGFDGDFGFDGFDGDF |<DETERMINISTICO >|<UNIFORME >)< COMA ><holi ><COMA ><holi ><CP >))
 }
+
+void dobleParametro():
+{Token t1; Token t2; Token t3; Token t4;}
+{
+( < num >|(t1 = < nombre >)
+{
+  //Si la variable no existe, sale un error
+  boolean encontrado = false; 
+   for(int i = 0; i<variables.size() && !encontrado; i++) {
+     if(variables.get(i).equals(t1.image)) {
+       encontrado = true; 
+   }
+   if(encontrado) { throw new Error("La variable ya se encontraba declarada previamente :c"); }
+   }
+}(SUM|MULTILPLY|DIVIDE|MINUS)  ( < num >|(t2 = < nombre >) {
+    //Si la variable no existe, sale un error
+  boolean encontrado = false; 
+   for(int i = 0; i<variables.size() && !encontrado; i++) {
+     if(variables.get(i).equals(t2.image)) {
+       encontrado = true; 
+   }
+   if(encontrado) { throw new Error("La variable ya se encontraba declarada previamente :c"); }
+   }
+}
+< COMA >
+}
+
+void parametro():
+{}
+{
+< ARCO ><AP ><holi ><COMA ><holi ><COMA ><holi ><CP >
+}
+
+void operacionCompleja():
+{Token t1;}
+{
+  (< num >|< var >)
+  }
 void arco():
 {}
 {
 < ARCO ><AP ><holi ><COMA ><holi ><COMA ><holi ><CP >
 }
-
+
+void var()
+{Token t;}
+{
+	(t = < nombre >)
+{
+    //Si la variable no existe, sale un error
+  boolean encontrado = false; 
+   for(int i = 0; i<variables.size() && !encontrado; i++) {
+     if(variables.get(i).equals(t2.image)) {
+       encontrado = true; 
+   }
+   if(!encontrado) { throw new Error("La variable no existe :'v"); }
+   }
+}
+}
+
+
+void exp() :
+{}
+{
+// Parses  E -> E + T
+//         E -> E - T
+//         E -> T
+//   in EBNF:  E -> T {+ T   | - T }
+  
+ term() ( < PLUS > term() | < MINUS > term() )*
+}
+
+void term() :
+{}
+{
+// Parses  T -> T * F
+//         T -> T / F
+//         T -> F
+//   in EBNF:  T -> F {* F   | /  F }
+  
+ fact() ( < MULTIPLY > fact() | < DIVIDE > fact() )*
+}
+
+void fact() :
+{
+// Parses  F -> B
+//         F -> -B
+//         B -> num
+//         B -> '(' E ')'
+//   in EBNF:  F -> [-](num |'(' E ')')
+}
+{
+    (< MINUS >)? (< num >| "(" exp() ")")
+}
+
+//No se hacen excepciones sino es error.
+//t.image accede directamente al atributo del token. 

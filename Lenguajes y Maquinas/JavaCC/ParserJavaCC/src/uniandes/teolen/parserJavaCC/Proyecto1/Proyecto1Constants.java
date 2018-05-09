@@ -19,27 +19,27 @@ public interface Proyecto1Constants {
   /** RegularExpression Id. */
   int DIVIDE = 7;
   /** RegularExpression Id. */
-  int P_RED = 8;
+  int DOS_PUNTOS = 8;
   /** RegularExpression Id. */
-  int VAR = 9;
+  int IGUAL = 9;
   /** RegularExpression Id. */
-  int SITIO = 10;
+  int COMA = 10;
   /** RegularExpression Id. */
-  int TRANSICION = 11;
+  int AP = 11;
   /** RegularExpression Id. */
-  int ARCO = 12;
+  int CP = 12;
   /** RegularExpression Id. */
-  int FIN_RED = 13;
+  int num = 13;
   /** RegularExpression Id. */
-  int DOS_PUNTOS = 14;
+  int DIGIT = 14;
   /** RegularExpression Id. */
-  int IGUAL = 15;
+  int LETRAMAY = 15;
   /** RegularExpression Id. */
-  int COMA = 16;
+  int LETRAMIN = 16;
   /** RegularExpression Id. */
-  int AP = 17;
+  int LETRA = 17;
   /** RegularExpression Id. */
-  int CP = 18;
+  int nombre = 18;
   /** RegularExpression Id. */
   int UNIFORME = 19;
   /** RegularExpression Id. */
@@ -53,17 +53,19 @@ public interface Proyecto1Constants {
   /** RegularExpression Id. */
   int holi = 24;
   /** RegularExpression Id. */
-  int num = 25;
+  int P_RED = 25;
   /** RegularExpression Id. */
-  int DIGIT = 26;
+  int VAR = 26;
   /** RegularExpression Id. */
-  int LETRAMAY = 27;
+  int VARIABLE = 27;
   /** RegularExpression Id. */
-  int LETRAMIN = 28;
+  int SITIO = 28;
   /** RegularExpression Id. */
-  int LETRA = 29;
+  int TRANSICION = 29;
   /** RegularExpression Id. */
-  int nombre = 30;
+  int ARCO = 30;
+  /** RegularExpression Id. */
+  int FIN_RED = 31;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -78,29 +80,30 @@ public interface Proyecto1Constants {
     "\"-\"",
     "\"*\"",
     "\"/\"",
-    "\"P_RED\"",
-    "\"VAR\"",
-    "\"SITIO\"",
-    "\"TRANSICION\"",
-    "\"ARCO\"",
-    "\"FIN_RED\"",
     "\":\"",
     "\" = \"",
     "\",\"",
     "\"(\"",
     "\")\"",
-    "\"Uniforme\"",
-    "\"Exponencial\"",
-    "\"Deterministico\"",
-    "\"capacidad\"",
-    "\"marcacion_i\"",
-    "\"holi\"",
     "<num>",
     "<DIGIT>",
     "<LETRAMAY>",
     "<LETRAMIN>",
     "<LETRA>",
     "<nombre>",
+    "\"Uniforme\"",
+    "\"Exponencial\"",
+    "\"Deterministico\"",
+    "\"capacidad\"",
+    "\"marcacion_i\"",
+    "\"holi\"",
+    "\"P_RED\"",
+    "\"VAR\"",
+    "<VARIABLE>",
+    "\"SITIO\"",
+    "\"TRANSICION\"",
+    "\"ARCO\"",
+    "\"FIN_RED\"",
   };
 
 }
