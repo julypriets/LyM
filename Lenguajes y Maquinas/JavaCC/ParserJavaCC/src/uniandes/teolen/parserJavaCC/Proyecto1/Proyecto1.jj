@@ -87,9 +87,20 @@ void sitio():
 
 
 void transicion():
-{Token t1;}
+{Token t; Token t1;}
 {
- < TRANSICION >((< nombre >)|(< TRANSICION ><AP >(t1 = < nombre >
+ < TRANSICION >((t = < nombre >
+ {
+    //Solo crea transiciones si no existen antes. 
+   boolean encontrado = false; 
+   for(int i = 0; i<transiciones.size() && !encontrado; i++) {
+     if(transiciones.get(i).equals(t.image)) {
+       encontrado = true; 
+   }
+   if(encontrado) { throw new Error("La transicion ya se encontraba declarada previamente :c"); }
+   else { transiciones.add(t.image); }
+   }  
+ })|(< TRANSICION ><AP >(t1 = < nombre >
  {
    //Solo crea transiciones si no existen antes. 
    boolean encontrado = false; 
@@ -100,53 +111,27 @@ void transicion():
    if(encontrado) { throw new Error("La transicion ya se encontraba declarada previamente :c"); }
    else { transiciones.add(t1.image); }
    }  
- })<COMA >(< EXPONENCIAL ><COMA > RGSTDGFDGDFGFDGFDGDF |<DETERMINISTICO >|<UNIFORME >)< COMA ><holi ><COMA ><holi ><CP >))
+ })<COMA >(< EXPONENCIAL ><COMA > dobleParametro() |<DETERMINISTICO ><COMA >parametro()|<UNIFORME ><COMA >dobleParametro())<CP >))
 }
 
 void dobleParametro():
-{Token t1; Token t2; Token t3; Token t4;}
+{}
 {
-( < num >|(t1 = < nombre >)
-{
-  //Si la variable no existe, sale un error
-  boolean encontrado = false; 
-   for(int i = 0; i<variables.size() && !encontrado; i++) {
-     if(variables.get(i).equals(t1.image)) {
-       encontrado = true; 
-   }
-   if(encontrado) { throw new Error("La variable ya se encontraba declarada previamente :c"); }
-   }
-}(SUM|MULTILPLY|DIVIDE|MINUS)  ( < num >|(t2 = < nombre >) {
-    //Si la variable no existe, sale un error
-  boolean encontrado = false; 
-   for(int i = 0; i<variables.size() && !encontrado; i++) {
-     if(variables.get(i).equals(t2.image)) {
-       encontrado = true; 
-   }
-   if(encontrado) { throw new Error("La variable ya se encontraba declarada previamente :c"); }
-   }
-}
-< COMA >
+  parametro() < COMA > parametro()
 }
 
 void parametro():
 {}
 {
-< ARCO ><AP ><holi ><COMA ><holi ><COMA ><holi ><CP >
+  (< num >|verificarVar())|fact()
 }
-
-void operacionCompleja():
-{Token t1;}
-{
-  (< num >|< var >)
-  }
 void arco():
 {}
 {
 < ARCO ><AP ><holi ><COMA ><holi ><COMA ><holi ><CP >
 }
 
-void var()
+void verificarVar():
 {Token t;}
 {
 	(t = < nombre >)
@@ -194,7 +179,7 @@ void fact() :
 //   in EBNF:  F -> [-](num |'(' E ')')
 }
 {
-    (< MINUS >)? (< num >| "(" exp() ")")
+    (< MINUS >)? ((< num >|var()) "(" exp() ")")
 }
 
 //No se hacen excepciones sino es error.

@@ -87,7 +87,7 @@ public class Proyecto1 implements Proyecto1Constants {
        encontrado = true;
    }
    if(encontrado) { {if (true) throw new Error("El sitio ya se encontraba declarada previamente :c");} }
-   else {  sitios.add(t1.image); }
+   else { sitios.add(t1.image); }
    }
     jj_consume_token(CAPACIDAD);
     jj_consume_token(DOS_PUNTOS);
@@ -125,48 +125,94 @@ public class Proyecto1 implements Proyecto1Constants {
   }
 
   final public void transicion() throws ParseException {
- Token t1; Token t2;
+ Token t; Token t1;
     jj_consume_token(TRANSICION);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case nombre:
-      jj_consume_token(nombre);
+      t = jj_consume_token(nombre);
+    //Solo crea transiciones si no existen antes. 
+   boolean encontrado = false;
+   for(int i = 0; i<transiciones.size() && !encontrado; i++) {
+     if(transiciones.get(i).equals(t.image)) {
+       encontrado = true;
+   }
+   if(encontrado) { {if (true) throw new Error("La transicion ya se encontraba declarada previamente :c");} }
+   else { transiciones.add(t.image); }
+   }
       break;
     case TRANSICION:
       jj_consume_token(TRANSICION);
       jj_consume_token(AP);
-      jj_consume_token(nombre);
+      t1 = jj_consume_token(nombre);
+   //Solo crea transiciones si no existen antes. 
    boolean encontrado = false;
    for(int i = 0; i<transiciones.size() && !encontrado; i++) {
      if(transiciones.get(i).equals(t1.image)) {
        encontrado = true;
    }
    if(encontrado) { {if (true) throw new Error("La transicion ya se encontraba declarada previamente :c");} }
-   else {  transiciones.add(t1.image); }
+   else { transiciones.add(t1.image); }
    }
       jj_consume_token(COMA);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case EXPONENCIAL:
         jj_consume_token(EXPONENCIAL);
+        jj_consume_token(COMA);
+        dobleParametro();
         break;
       case DETERMINISTICO:
         jj_consume_token(DETERMINISTICO);
+        jj_consume_token(COMA);
+        parametro();
         break;
       case UNIFORME:
         jj_consume_token(UNIFORME);
+        jj_consume_token(COMA);
+        dobleParametro();
         break;
       default:
         jj_la1[6] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
-      jj_consume_token(COMA);
-      jj_consume_token(holi);
-      jj_consume_token(COMA);
-      jj_consume_token(holi);
       jj_consume_token(CP);
       break;
     default:
       jj_la1[7] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void dobleParametro() throws ParseException {
+    parametro();
+    jj_consume_token(COMA);
+    parametro();
+  }
+
+  final public void parametro() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case num:
+    case nombre:
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case num:
+        jj_consume_token(num);
+        break;
+      case nombre:
+        verificarVar();
+        break;
+      default:
+        jj_la1[8] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      break;
+    case MINUS:
+    case VAR:
+      fact();
+      break;
+    default:
+      jj_la1[9] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -183,6 +229,105 @@ public class Proyecto1 implements Proyecto1Constants {
     jj_consume_token(CP);
   }
 
+  final public void verificarVar() throws ParseException {
+ Token t;
+    t = jj_consume_token(nombre);
+    //Si la variable no existe, sale un error
+  boolean encontrado = false;
+   for(int i = 0; i<variables.size() && !encontrado; i++) {
+     if(variables.get(i).equals(t2.image)) {
+       encontrado = true;
+   }
+   if(!encontrado) { {if (true) throw new Error("La variable no existe :'v");} }
+   }
+  }
+
+  final public void exp() throws ParseException {
+    term();
+    label_5:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+      case MINUS:
+        ;
+        break;
+      default:
+        jj_la1[10] = jj_gen;
+        break label_5;
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PLUS:
+        jj_consume_token(PLUS);
+        term();
+        break;
+      case MINUS:
+        jj_consume_token(MINUS);
+        term();
+        break;
+      default:
+        jj_la1[11] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+  }
+
+  final public void term() throws ParseException {
+    fact();
+    label_6:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case MULTIPLY:
+      case DIVIDE:
+        ;
+        break;
+      default:
+        jj_la1[12] = jj_gen;
+        break label_6;
+      }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case MULTIPLY:
+        jj_consume_token(MULTIPLY);
+        fact();
+        break;
+      case DIVIDE:
+        jj_consume_token(DIVIDE);
+        fact();
+        break;
+      default:
+        jj_la1[13] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+  }
+
+  final public void fact() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case MINUS:
+      jj_consume_token(MINUS);
+      break;
+    default:
+      jj_la1[14] = jj_gen;
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case num:
+      jj_consume_token(num);
+      break;
+    case VAR:
+      var();
+      break;
+    default:
+      jj_la1[15] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(AP);
+    exp();
+    jj_consume_token(CP);
+  }
+
   /** Generated Token Manager. */
   public Proyecto1TokenManager token_source;
   SimpleCharStream jj_input_stream;
@@ -192,13 +337,13 @@ public class Proyecto1 implements Proyecto1Constants {
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[8];
+  final private int[] jj_la1 = new int[16];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x4000000,0x10000000,0x20000000,0x40000000,0x42000,0x402000,0x380000,0x20040000,};
+      jj_la1_0 = new int[] {0x4000000,0x10000000,0x20000000,0x40000000,0x42000,0x402000,0x380000,0x20040000,0x42000,0x4042020,0x30,0x30,0xc0,0xc0,0x20,0x4002000,};
    }
 
   /** Constructor with InputStream. */
@@ -212,7 +357,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -226,7 +371,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -236,7 +381,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -246,7 +391,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -255,7 +400,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -264,7 +409,7 @@ public class Proyecto1 implements Proyecto1Constants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 8; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -320,7 +465,7 @@ public class Proyecto1 implements Proyecto1Constants {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 16; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
