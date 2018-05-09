@@ -1,0 +1,307 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  IGNORE_CASE = false;
+  STATIC = false;
+}
+PARSER_BEGIN(ParserProlog)
+package uniandes.teolen.parserJavaCC.parserProlog;
+
+import java.util.*;
+ 
+public class ParserProlog {
+  
+  public ArrayList<String> variables = new ArrayList<String>();
+
+  public ArrayList<String> transiciones = new ArrayList<String>();
+
+  public ArrayList<String> sitios = new ArrayList<String>();  
+} 
+
+PARSER_END(ParserProlog)
+
+SKIP :
+{
+ 	" " | "\r" | "\t" | "\n"
+
+}
+TOKEN : /* OPERATORS */
+{
+    <ARROW: ":-">
+|   < EQQUALS: ":=" >
+|   < EQUALS: "=" >
+|   < PLUS : "+" >
+|   < MINUS : "-">
+|   < MULTIPLY : "*" >
+|   < DIVIDE : "/" >
+}
+
+TOKEN :
+{
+ 	< SIT: "SITIO:" >
+| 	< TRA: "TRANSICION" >
+|   < PRED: "P_RED" >
+|   < FIN: "FIN_RED" >
+|   < CAP: "capacidad" >
+|   < #DIGIT: "0" | "1" | "2"| "3" | "4" | "5" |  "6" | "7" | "8" |"9" >
+|   < ARC: "ARCO" >
+|   < #MAY: ["A"-"Z"] >
+|   < #MIN: ["a"-"z"] >
+|   < VARI: "VAR" >
+|   < MARC: "marcacion_i" >
+|   < EXPO: "Exponencial"  >
+|   < DETE: "Deterministico" >
+|   < UNI: "Uniforme" >
+|   < PARA: "(" >
+|   < PARC: ")" >
+|   < VAR: ( <MAY> ( <MAY > | < MIN > | < NUM >)* )>
+|   < NOMB: ( (<MIN> | < MAY >)  ( <MAY > | < MIN >)* )>
+|   < NUM: (< DIGIT >(< DIGIT >)*) >
+|   < MARCACION: < MARC > < EQQUALS > < NUM >>
+}
+
+
+void hr():
+{}
+{
+	(defInicio())
+	(defVariables())*
+	(defSitio())*
+	(defTransicion())*
+	(defArcos())*
+	(defFin())
+	  
+}
+
+
+
+void defInicio():
+{}
+{
+  < PRED > <NOMB >
+}
+
+void defVariables():
+{Token t;}
+{
+    
+  
+ (< VARI >)(t = < VAR >)
+
+  {
+
+    boolean x = false;
+
+    for(int i = 0; i < variables.size(); i++) {
+
+    	if(variables.get(i).equals(t.image)) {
+
+    	   x = true;
+
+    	}
+    }
+
+
+    if(x) {
+
+		throw new Error("ya habia sido declarada la variable");
+    }
+    
+  }
+
+
+
+ (< EQUALS >)(< NUM >) { variables.add(t.image); } 
+ 
+}
+  
+
+void defSitio() throws Error:
+{Token t;}
+{
+  (< SIT >)(t =< VAR > ){ sitios.add(t.image); }
+  
+  (< CAP >)(< EQQUALS >)(< NUM > | ((var())(< PLUS >|< MINUS >|< MULTIPLY >|< DIVIDE >)?)* )(< MARC > < EQQUALS > (< NUM >|< CAP >))
+
+}
+
+void defTransicion():
+{Token t;}
+{
+  < TRA >
+  (
+     (t = < VAR >)
+|    (< PARA >) ((t = < VAR >) (",") (((< EXPO >)(",")(exp())(",")(exp()))| ((< DETE >)(",")(exp())) | ((< UNI >)(",")(exp())(",")(exp())))) (< PARC >)
+  )
+  
+  { transiciones.add(t.image);}
+}
+
+
+void defArcos():
+{}
+{
+  < ARC >< PARA > ( ("Entrando:"))? (deDonde()) ((",")(exp()))? < PARC >
+}
+
+void defFin():
+{}
+{
+  < FIN > 
+}
+
+
+void deDonde():
+{Token t; Token q;}
+{
+  (t = < VAR >) (",") (q = < VAR >)
+  {
+    boolean x = false;
+    
+    for(int i = 0; i < sitios.size(); i++)
+    {
+      if(sitios.get(i).equals(t.image))
+      {
+        for(int j = 0; j < transiciones.size(); j++)
+        {
+          if(transiciones.get(j).equals(q.image))
+          {
+             x = true;
+             break;
+          }
+        }
+      }
+    }
+
+    if(!x)
+    {
+      for(int i = 0; i < transiciones.size(); i++)
+      {
+        if(transiciones.get(i).equals(t.image))
+        {
+          for(int j = 0; j < sitios.size(); j++)
+          {
+            if(sitios.get(j).equals(q.image))
+            {
+               x = true;
+               break;
+            }
+          }
+        }
+      }
+    }
+
+    if(!x)
+    {
+      throw new Error("La definicion del arco es invalida");
+    }
+    
+  }
+} 
+
+void var():
+{Token t;}
+{
+ 	(t = < VAR >)
+
+ 	 {
+
+    boolean x = false;
+	
+    for(int i = 0; i < variables.size() && !x; i++)
+    {
+      if(variables.get(i).equals(t.image))
+      {
+        x = true;
+      }
+    }
+
+    if(!x) {
+
+      throw new Error("Variable no declarada");
+
+    }
+
+  }	  
+	  	
+}
+
+void sitio() throws Error:
+{Token t;}
+{
+	(t = < VAR >)
+
+	{
+	  boolean x = false;
+	  
+	  for(int i = 0; i < sitios.size();i++)
+	  {
+		if(sitios.get(i).equals(t.image)) {
+
+			x = true;
+
+		}
+	  }
+
+	
+
+
+	if(!x) {
+
+		throw new Error("No existe el sitio");
+	  
+	}
+
+}	
+
+}
+
+void trans() throws Error:
+{Token t;}
+{
+	(t = < VAR >)
+
+	{
+	   boolean x = false;
+	  
+	  for(int i = 0; i < transiciones.size();i++)
+	  {
+		if(transiciones.get(i).equals(t.image)) {
+
+			x = true;
+
+		}
+	  }
+
+	
+
+
+	if(!x) {
+
+		throw new Error("No existe la transición");	  
+	}
+	  
+	}
+
+}
+
+void exp() :
+{}
+{  
+ term() ( < PLUS > term() | < MINUS > term() )*
+}
+void term():
+{}
+{  
+ fact() ( < MULTIPLY > fact() | < DIVIDE > fact() )*
+}
+
+void fact() :
+{}
+{
+    (< MINUS >)? ((< NUM > | var())| "(" exp() ")")
+}
+
+
