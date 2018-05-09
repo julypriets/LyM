@@ -29,37 +29,37 @@ public interface Proyecto1Constants {
   /** RegularExpression Id. */
   int CP = 13;
   /** RegularExpression Id. */
-  int UNIFORME = 14;
+  int num = 14;
   /** RegularExpression Id. */
-  int EXPONENCIAL = 15;
+  int DIGIT = 15;
   /** RegularExpression Id. */
-  int DETERMINISTICO = 16;
+  int LETRAMAY = 16;
   /** RegularExpression Id. */
-  int CAPACIDAD = 17;
+  int LETRAMIN = 17;
   /** RegularExpression Id. */
-  int MARCACION = 18;
+  int LETRA = 18;
   /** RegularExpression Id. */
-  int ENTRANDO = 19;
+  int VAR = 19;
   /** RegularExpression Id. */
-  int holi = 20;
+  int UNIFORME = 20;
   /** RegularExpression Id. */
-  int VAR = 21;
+  int EXPONENCIAL = 21;
   /** RegularExpression Id. */
-  int ARCO = 22;
+  int DETERMINISTICO = 22;
   /** RegularExpression Id. */
-  int TRANSICION = 23;
+  int CAPACIDAD = 23;
   /** RegularExpression Id. */
-  int SITIO = 24;
+  int MARCACION = 24;
   /** RegularExpression Id. */
-  int num = 25;
+  int ENTRANDO = 25;
   /** RegularExpression Id. */
-  int DIGIT = 26;
+  int holi = 26;
   /** RegularExpression Id. */
-  int LETRAMAY = 27;
+  int ARCO = 27;
   /** RegularExpression Id. */
-  int LETRAMIN = 28;
+  int TRANSICION = 28;
   /** RegularExpression Id. */
-  int LETRA = 29;
+  int SITIO = 29;
   /** RegularExpression Id. */
   int nombre = 30;
   /** RegularExpression Id. */
@@ -86,6 +86,12 @@ public interface Proyecto1Constants {
     "\",\"",
     "\"(\"",
     "\")\"",
+    "<num>",
+    "<DIGIT>",
+    "<LETRAMAY>",
+    "<LETRAMIN>",
+    "<LETRA>",
+    "\"VAR\"",
     "\"Uniforme\"",
     "\"Exponencial\"",
     "\"Deterministico\"",
@@ -93,15 +99,9 @@ public interface Proyecto1Constants {
     "\"marcacion_i\"",
     "\"Entrando:\"",
     "\"holi\"",
-    "\"VAR\"",
     "\"ARCO\"",
     "\"TRANSICION\"",
     "\"SITIO\"",
-    "<num>",
-    "<DIGIT>",
-    "<LETRAMAY>",
-    "<LETRAMIN>",
-    "<LETRA>",
     "<nombre>",
     "\"P_RED\"",
     "\"FIN_RED\"",

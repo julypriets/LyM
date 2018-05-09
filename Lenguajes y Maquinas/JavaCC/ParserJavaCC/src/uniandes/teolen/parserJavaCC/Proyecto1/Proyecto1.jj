@@ -1,6 +1,7 @@
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
- */options{  static = false;}PARSER_BEGIN(Proyecto1)package uniandes.teolen.parserJavaCC.Proyecto1;
+ */options{
+  IGNORE_CASE = false;  static = false;}PARSER_BEGIN(Proyecto1)package uniandes.teolen.parserJavaCC.Proyecto1;
 import java.util.*;
 public class Proyecto1{	ArrayList < String > variables = new ArrayList<String>();
 	ArrayList < String > sitios = new ArrayList<String>();
@@ -13,6 +14,12 @@ public class Proyecto1{	ArrayList < String > variables = new ArrayList<String>
 |< COMA : "," >
 | < AP : "(" >
 | < CP : ")" >
+}TOKEN :{ < num : (< DIGIT >)+ >
+| < #DIGIT : [ "0"-"9" ] >
+| < #LETRAMAY : [ "A"-"Z" ] >
+| < #LETRAMIN : [ "a"-"z" ] >
+| < #LETRA : < LETRAMIN > | < LETRAMAY > >
+| < VAR:  "VAR" >
 | < UNIFORME : "Uniforme" >
 | < EXPONENCIAL : "Exponencial" >
 | < DETERMINISTICO : "Deterministico" >
@@ -20,15 +27,9 @@ public class Proyecto1{	ArrayList < String > variables = new ArrayList<String>
 | < MARCACION : "marcacion_i" >
 | < ENTRANDO : "Entrando:" >
 | < holi : "holi" >
-| < VAR:  "VAR" >
 | < ARCO : "ARCO" >
 | < TRANSICION : "TRANSICION" >
 | < SITIO : "SITIO" >
-}TOKEN :{ < num : (< DIGIT >)+ >
-| < #DIGIT : [ "0"-"9" ] >
-| < #LETRAMAY : [ "A"-"Z" ] >
-| < #LETRAMIN : [ "a"-"z" ] >
-| < #LETRA : < LETRAMIN > | < LETRAMAY > >
 | < nombre : < LETRA > (< LETRA > | < num >)+ >
 | < P_RED : "P_RED" >
 | < FIN_RED : "FIN_RED" >
@@ -45,8 +46,8 @@ void pRed():
 void var(): 
 {Token t1;}
 {
- < VAR >(t1 = <nombre >)
- {
+ < VAR > (t1=<nombre >)
+{
    boolean encontrado = false; 
    for(int i = 0; i<variables.size() && !encontrado; i++) {
      if(variables.get(i).equals(t1.image)) {
@@ -56,7 +57,8 @@ void var():
    else {  variables.add(t1.image); }
    }
 }
- <IGUAL ><num >
+
+ (<IGUAL >)(<num >)
 }
 
 
@@ -157,7 +159,7 @@ void arcoEntrando():
 void arco2():
 {Token t1; Token t2;}
 {
-  (t1 = < nombre >)< COMA >(t2 = < nombre >)(< CP >|(< COMA >(< num >(< PLUS >|< MINUS >|< MULTIPLY >|< DIVIDE >)< nombre >)))
+  (t1 = < nombre >)< COMA >(t2 = < nombre >)(< CP >|(< COMA >(< num >(< PLUS >|< MINUS >|< MULTIPLY >|< DIVIDE >)< nombre >)< CP >))
   {
 
     int p1=0;
