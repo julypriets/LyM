@@ -41,31 +41,29 @@ public interface Proyecto1Constants {
   /** RegularExpression Id. */
   int MARCACION = 19;
   /** RegularExpression Id. */
-  int ENTRANDO = 20;
+  int holi = 20;
   /** RegularExpression Id. */
-  int holi = 21;
+  int ARCO = 21;
   /** RegularExpression Id. */
-  int ARCO = 22;
+  int TRANSICION = 22;
   /** RegularExpression Id. */
-  int TRANSICION = 23;
+  int SITIO = 23;
   /** RegularExpression Id. */
-  int SITIO = 24;
+  int P_RED = 24;
   /** RegularExpression Id. */
-  int P_RED = 25;
+  int FIN_RED = 25;
   /** RegularExpression Id. */
-  int FIN_RED = 26;
+  int DIGIT = 26;
   /** RegularExpression Id. */
-  int DIGIT = 27;
+  int num = 27;
   /** RegularExpression Id. */
-  int num = 28;
+  int LETRAMAY = 28;
   /** RegularExpression Id. */
-  int LETRAMAY = 29;
+  int LETRAMIN = 29;
   /** RegularExpression Id. */
-  int LETRAMIN = 30;
+  int LETRA = 30;
   /** RegularExpression Id. */
-  int LETRA = 31;
-  /** RegularExpression Id. */
-  int NOMBRE = 32;
+  int NOMBRE = 31;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -92,7 +90,6 @@ public interface Proyecto1Constants {
     "\"Deterministico\"",
     "\"capacidad\"",
     "\"marcacion_i\"",
-    "\"Entrando\"",
     "\"holi\"",
     "\"ARCO\"",
     "\"TRANSICION\"",

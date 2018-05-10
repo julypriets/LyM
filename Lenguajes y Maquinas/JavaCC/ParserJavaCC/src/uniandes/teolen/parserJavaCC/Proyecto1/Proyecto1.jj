@@ -24,7 +24,6 @@ public class Proyecto1{	ArrayList < String > variables = new ArrayList<String>
 | < DETERMINISTICO : "Deterministico" >
 | < CAPACIDAD : "capacidad" >
 | < MARCACION : "marcacion_i" >
-| < ENTRANDO : "Entrando" >
 | < holi : "holi" >
 | < ARCO : "ARCO" >
 | < TRANSICION : "TRANSICION" >
@@ -147,9 +146,8 @@ void parametro():
 void arco():
 {}
 {
-< ARCO ><AP >
-//(LOOKAHEAD(2)
-(arcoEntrando()| arco2())< CP >
+ < ARCO ><AP >
+(  LOOKAHEAD(2)arcoEntrando()| arco2())< CP >
 }
 
 void arcoEntrando():

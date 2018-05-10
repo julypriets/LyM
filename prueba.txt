@@ -28,7 +28,7 @@ TRANSICION Atender2
 TRANSICION (Terminar1, Deterministico, Y+(-Y/2))
 TRANSICION (Terminar2, Uniforme, 1, 3)
 
-ARCO(Entrando: Entrar, ColaDeEspera)
+ARCO(Entrando : Entrar, ColaDeEspera)
 ARCO(ColaDeEspera, Atender1, 1)
 ARCO(Procesadores, Atender1)
 

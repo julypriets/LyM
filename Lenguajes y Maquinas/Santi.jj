@@ -1,4 +1,4 @@
-/**
+﻿/**
  * JavaCC file
  */
  
@@ -98,7 +98,7 @@ void defVariables():
 
     	if(variables.get(i).equals(t.image)) {
 
-    	   x = true;
+    	   x = true;	
 
     	}
     }
@@ -303,5 +303,4 @@ void fact() :
 {
     (< MINUS >)? ((< NUM > | var())| "(" exp() ")")
 }
-
 
