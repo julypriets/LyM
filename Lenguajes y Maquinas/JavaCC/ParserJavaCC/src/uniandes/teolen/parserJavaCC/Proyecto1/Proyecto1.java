@@ -70,10 +70,9 @@ public class Proyecto1 implements Proyecto1Constants {
    for(int i = 0; i<variables.size() && !encontrado; i++) {
      if(variables.get(i).equals(t1.image)) {
       encontrado = true;
- }
+ } }
    if(encontrado) { {if (true) throw new Error("La variable ya se encontraba declarada previamente :c");} }
    else {  variables.add(t1.image); }
-   }
   }
 
   final public void sitio() throws ParseException {
@@ -305,10 +304,10 @@ public class Proyecto1 implements Proyecto1Constants {
       jj_la1[11] = jj_gen;
       ;
     }
-    Boolean sitio1 = false;
-    Boolean sitio2 = false;
-    Boolean transicion1 = false;
-    Boolean transicion2 = false;
+    boolean sitio1 = false;
+    boolean sitio2 = false;
+    boolean transicion1 = false;
+    boolean transicion2 = false;
 
       boolean encontrado1 = false;
    for(int i = 0; i<transiciones.size() && !encontrado1; i++) {
@@ -316,7 +315,7 @@ public class Proyecto1 implements Proyecto1Constants {
        encontrado1 = true;
        transicion1=true;
    }
-   if(!encontrado1) { {if (true) throw new Error("La variable no existe :'v");} }
+   if(!encontrado1) { {if (true) throw new Error("La transicion no existe");} }
    }
 
    for(int i = 0; i<sitios.size() && !encontrado1; i++) {
@@ -324,7 +323,7 @@ public class Proyecto1 implements Proyecto1Constants {
        encontrado1 = true;
        sitio1=true;
    }
-   if(!encontrado1) { {if (true) throw new Error("La variable no existe :'v");} }
+   if(!encontrado1) { {if (true) throw new Error("La variable no existe");} }
  }
 
  boolean encontrado2 = false;
@@ -333,7 +332,7 @@ public class Proyecto1 implements Proyecto1Constants {
        encontrado2 = true;
        transicion2=true;
    }
-   if(!encontrado2) { {if (true) throw new Error("La variable no existe :'v");} }
+   if(!encontrado2) { {if (true) throw new Error("La variable no existe");} }
    }
 
    for(int i = 0; i<sitios.size() && !encontrado2; i++) {
@@ -341,7 +340,7 @@ public class Proyecto1 implements Proyecto1Constants {
        encontrado2 = true;
        sitio2=true;
    }
-   if(!encontrado2) { {if (true) throw new Error("La variable no existe :'v");} }
+   if(!encontrado2) { {if (true) throw new Error("La variable no existe");} }
  }
 
 
@@ -354,14 +353,26 @@ public class Proyecto1 implements Proyecto1Constants {
   final public void verificarVar() throws ParseException {
  Token t;
     t = jj_consume_token(NOMBRE);
-    //Si la variable no existe, sale un error
+
   boolean encontrado = false;
+  boolean esNumber = false;
+   try {
+     if(t.image.equals("Inf"))
+     {
+       {if (true) return;}
+     }
+  double d = Double.parseDouble( t.image );
+  esNumber =  true;
+        }catch(Exception e ) {
+  esNumber =  false;
+        }
+        if(!esNumber) {
    for(int i = 0; i<variables.size() && !encontrado; i++) {
      if(variables.get(i).equals(t.image)) {
        encontrado = true;
-   }
-   if(!encontrado) { {if (true) throw new Error("La variable no existe :'v");} }
-   }
+   } }
+   if(!encontrado) { {if (true) throw new Error("La variable " + t.image + " no existe");} }
+    }
   }
 
   final public void exp() throws ParseException {
