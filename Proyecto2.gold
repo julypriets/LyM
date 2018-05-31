@@ -1,0 +1,442 @@
+// -----------------------
+// Integrating   a  finitite state transducer with a PDA   to implemet a LEXER-PARSER
+// Author:  Silvia Takahashi
+// UNIVERSIDAD DE LOS ANDES
+// -----------------------
+ 
+ 
+ 
+using gold.structures.automaton.*
+using gold.visualization.automaton.*
+
+procedure main(args:String[]) begin
+    Lexer = createTransducer()
+	Parser2 = createAutomaton2()
+	Parser = createAutomaton()  //  PDA de tres estados, que implementa diretamente la gramática
+   stdin= java.util.Scanner(System.$in)
+   print "Desea usar el parser  que implementa directamente la gramatica (1 para SI)"
+  var mode:String
+  mode := stdin.nextLine()
+     
+  // GAutomataFrame.show(Lexer)
+   
+  
+  if mode.charAt(0) ='1' then   
+     print  "usando el parser que implemeta direcatmente la gramatica"
+     GAutomataFrame.show(Parser)
+     testParser(Lexer,Parser)
+   
+   else 
+     print  "usando el parser más eficaz"
+    
+     	GAutomataFrame.show(Parser2)
+    
+     testParser(Lexer,Parser2)
+    end  
+    end
+    
+    
+    
+
+procedure testParser(M:ITransducer,P:IPushdownAutomaton) begin
+	// M es el  analizador léxico
+	// P es el  analizador sintáctico
+	var sc:java.util.Scanner(System.$in)
+	string="string"
+	while string.length()>1 do
+		print "----------------------------"
+		print "Digite la cadena de entrada: (para termnar la cadena vacia)"
+		string:=sc.nextLine()+" "   //Se le agrega un espacio al final para marcar el final de la entrada. El espacio también es un separador.
+		result:=M.acceptsString(string)    
+		tokenStream := M.getOutputString()
+		print "Lexicamente, la cadena fue "+(result?"aceptada":"rechazada")+". Resultado: "+tokenStream 
+	  
+	  
+		result:=P.acceptsString(tokenStream )  // Al parser se le pasa el token stream
+		print "Sintacticamente, la cadena fue "+(result?"aceptada":"rechazada")
+		
+	end
+	print("Termino la ejecucion")
+end 
+
+ 
+
+function createAutomaton():IPushdownAutomaton begin
+	// Este autómata implementa  la  gramática directamente como se  ve en las notas de calse
+	//
+	//  E -> n
+	//  E ->  v
+	//  E ->  (+L)
+	//  E ->  (*L)
+	//  L ->  E
+	//  L ->  L E
+	
+	
+	Terms := {'(',')','+','*','v','n'}
+	NonTerms := {'E','L'}
+	Q:={"I","q","F"}
+	Σ:=Terms
+	Γ:=Terms ∪ NonTerms ∪ { '$'} 
+	q₀:="I"
+	F:={"F"}
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+
+	M.delta("I","q","").push("$E")
+	M.delta("q","F","").pop("$")
+	
+	for each x in {'(',')','+','*','v','n'} do
+	  M.delta("q","q",""+x).pop(""+x)
+	end
+	M.delta("q","q","").changeTop("E","v")
+	M.delta("q","q","").changeTop("E","n")
+	M.delta("q","q","").changeTop("E",")L+(")
+	M.delta("q","q","").changeTop("E",")L*(")
+	M.delta("q","q","").changeTop("L","E")
+	M.delta("q","q","").changeTop("L","EL")
+return M
+end
+
+function createAutomaton2():IPushdownAutomaton begin
+	
+	// En lugar de usar la gramática definimos un autómata con más estados y no tan nodeterminísitico
+	//  Con dos estados  El inicial que si lee v o n pasa al final
+	//  Si le abrir paréntesis seguido de +.  empila un 1 y vuelva al mismo estado
+	//  Si le abrir paréntesis seguido de *.  empila un 1 y vuelva al mismo estado
+	// del estado 2 vuelve al estado 1 sin leer nada 
+	//  Si en el estado 2   lee un cerrar parenteiss deempila 1
+	
+	Terms := {'(',')','+','*','v','n'}
+	NonTerms := {'E','L'}
+	Q:={"I","F"}
+	Σ:={'(',')','+','*','v','n'}
+	Γ:={'1'}
+	q₀:="I"
+	F:={"F"}
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+	
+	M.delta("I","I","(+").push("1")
+	M.delta("I","I","(*").push("1")
+	M.delta("I","F","v").ignore()
+	M.delta("I","F","n").ignore()
+	M.delta("F","F",")").pop("1")
+	M.delta("F","I","").ignore()
+
+
+return M
+end
+
+  
+function createTransducer():ITransducer begin
+	// Analizador léxico: Recibe una cadena de  letras minúsculas,  dígitos, paréntesis y epacios.
+	// genera una cadena de paréntesis, suma,asterostico,ves y enes
+	// reconoce las sigueintes palabras reservadas:  plus y times que  traduce en y * resspectivamente
+	// los demás nombres  los traduce  a v; las cadenas de digito s  a n.
+	
+	Q:= {"I","Id","Parentesis","Error","Nom","Num","=","Exp",",", "Param","Params","Space", //Exp hace referencia a una expresión
+	//Estados con más de un caracter
+	"p","p_","p_r","p_re","p_red",
+	"v","va","var",
+	"s","si","sit","siti","sitio",
+	"c","ca","cap","capa","capac","capaci","capacid","capacida","capacidad",
+	"m","ma","mar","marc","marca","marcac","marcaci","marcacio","marcacion","marcacion_","marcacion_i",
+	"t","tr","tra","tran","trans","transi","transic","transici","transicio","transicion",
+	"d","de","det","dete","deter","determ","determi","determin","determini","determinis","determinist","deterministi","deterministic","deterministico",
+	"u","un","uni","unif","unifo","unifor","uniform","uniforme",
+	"e","ex","exp","expo","expon","expone","exponen","exponenc","exponenci","exponencia","exponencial",
+	"a","ar","arc","arco",
+	"f", "fi","fin","fin_","fin_r","fin_re","fin_red",
+	":",":="
+	}
+	
+	Σ:=('0'‥'9') ∪ ('a' ‥ 'z') ∪ {'(',')',' ','_',':',',','	','=','+','-','/','*'} 
+	Out:={'n','#','P','S','C','I','T','X','D','A','F','Q','V','U',
+	//Simbolos
+	'(',')',',','+','-','/','*',':','=','	','E'} 
+	q₀:="I"
+	F:= {"I"}
+	return 	GDeterministicTransducer(Q,Σ,Out,q₀,F,δ,g,h)
+end
+
+function δ(q,σ) begin
+	if (q = "Error") then return "Error"
+	
+	elseif q="I" and σ!='p' then return "Error"
+	//Reconoce P_RED al inicio
+	elseif q="I" and σ='p' then return "p"
+	elseif q="p" and σ!='_' then return "Error"
+	elseif q="p" and σ='_' then return "p_"
+	elseif q="p_" and σ!='r' then return "Error"
+	elseif q="p_" and σ='r' then return "p_r"
+	elseif q="p_r" and σ!='e' then return "Error"
+	elseif q="p_r" and σ='e' then return "p_re"
+	elseif q="p_re" and σ!='d' then return "Error"
+	elseif q="p_re" and σ='d' then return "p_red"
+	elseif q="p_red" and σ!=' ' then return "Error"
+	elseif q="p_red" and σ=' ' then return "Space"
+	
+	elseif q="Space" and σ ∉ (('a' ‥ 'z')∨('0'‥'9')) then return "error"
+	elseif q="Space" and σ ∈ ('a' ‥ 'z') then return "Nom"
+	elseif q="Space" and σ ∈ ('0' ‥ '9') then return "Num"
+	
+	//Reconoce el nombre de P_RED 
+	elseif q="Nom" and σ ∈ ('0' ‥ '9') then return "Error"
+	elseif q="Nom" and σ ∈ ('a' ‥ 'z') then return "Nom"
+	
+	//Reconoce VAR después de haber nombrado a P_RED
+	elseif q="Nom" and σ = 'v'  then return "v"
+	elseif q = "v" and σ != 'v' then return "Nom"
+	elseif q="v" and σ = 'a' then return "va"
+	elseif q = "va" and σ != 'r' then return "Nom"
+	elseif q="va" and σ = 'r' then return "var"
+	
+	//Reconoce el nombre de VAR 
+	elseif q="var" and σ = ' ' then return "Space"
+	elseif q="Space" and σ = '=' then return "="
+	
+	//Reconoce el valor de VAR
+	elseif q="=" and σ ∈ ('a' ‥ 'z') then return "Error"
+	elseif q="=" and σ = ' ' then return "Space"
+	elseif q="=" and σ ∈ ('0' ‥ '9') then return "Num"	
+		
+	//Puede reconocer varias variables
+	elseif q="Num" and σ = 'v' then return "v"
+	
+	//Reconoce un SITIO después de VAR
+	elseif q="Num" and σ = 's' then return "s"
+	elseif q="s" and σ != 'i' then return "Nom"
+	elseif q="s" and σ = 'i' then return "si"
+	elseif q="si" and σ != 't' then return "Nom"
+	elseif q="si" and σ = 't' then return "sit"
+	elseif q="sit" and σ != 'i' then return "Nom"
+	elseif q="sit" and σ = 'i' then return "siti"
+	elseif q="siti" and σ != 'o' then return "Nom"
+	elseif q="siti" and σ = 'o' then return "sitio"
+	
+	elseif q="sitio" and σ != ':' then return "Error"
+	elseif q="sitio" and σ = ':' then return ":"
+	elseif q=":" and σ ∈ ('a' ‥ 'z') then return "Nom"
+	elseif q = ":" and σ = ' ' then return "Space"
+	//Voy a asumir que vuelve arriba cuando decimos que "q = Nom"
+	
+	//Reconoce CAPACIDAD tras nombrar un SITIO
+	elseif q="Nom" and σ = 'c' then return "c"
+	elseif q="c" and σ = 'a' then return "ca"
+	elseif q="ca" and σ = 'p' then return "cap"
+	elseif q="cap" and σ = 'a' then return "capa"
+	elseif q="capa" and σ = 'c' then return "capac"
+	elseif q="capac" and σ = 'i' then return "capaci"
+	elseif q="capaci" and σ = 'd' then return "capacid"
+	elseif q="capacid" and σ = 'a' then return "capacida"
+	elseif q="capacida" and σ = 'd' then return "capacidad"
+	//Reconoce :=
+	elseif q="capacidad" and σ = ':' then return ":"
+	elseif q=":" and σ = '=' then return ":="
+	//Puede recibir literal "Inf" pero también "Infi :'v", toca arreglar eso xD
+	elseif q=":=" and σ ∈ {('a' ‥ 'z'),('0' ‥ '9'),{'+','*','-','/'}} then return "Exp"
+	elseif q="Exp" and σ ∈ {('a' ‥ 'z'),('0' ‥ '9'),{'+','*','-','/',' '}} then return "Exp"
+	
+		
+	elseif q="Exp" and σ = 's' then return "s"
+	/*
+	 * elseif q="s" and σ = 'i' then return "si"
+	elseif q="si" and σ = 't' then return "sit"
+	elseif q="sit" and σ = 'i' then return "siti"
+	elseif q="siti" and σ = 'o' then return "Error" 
+	*/
+	//Error si hay un sitio dentro de otro 
+		
+		
+	//Reconoce MARCACION_I despues de un sitio
+	elseif q="Exp" and σ = 'm' then return "m"
+	elseif q="m" and σ = 'a' then return "ma"
+	elseif q="ma" and σ = 'r' then return "mar"
+	elseif q="mar" and σ = 'c' then return "marc"
+	elseif q="marc" and σ = 'a' then return "marca"
+	elseif q="marca" and σ = 'c' then return "marcac"
+	elseif q="marcac" and σ = 'i' then return "marcaci"
+	elseif q="marcaci" and σ = 'o' then return "marcacio"
+	elseif q="marcacio" and σ = 'n' then return "marcacion"
+	elseif q="marcacion" and σ = '_' then return "marcacion_"
+	elseif q="marcacion_" and σ = 'i' then return "marcacion_i"
+	
+	elseif q="marcacion_i" and σ != ':' then return "Error"
+	elseif q ="marcacion_i" and σ = ':' then return ":"
+	elseif q = ":" and σ = '=' then return ":="
+	/*
+	 * elseif q=":=" and σ ∈ {('a' ‥ 'z'),('0' ‥ '9'),{'+','*','-','/'}} then return "Exp"
+	elseif q="Exp" and σ ∈ {('a' ‥ 'z'),('0' ‥ '9'),{'+','*','-','/'}} then return "Exp"
+	*/
+	
+	/*elseif q="Exp" and σ = 's' then return "s"
+	elseif q="s" and σ = 'i' then return "si"
+	elseif q="si" and σ = 't' then return "sit"
+	elseif q="sit" and σ = 'i' then return "siti"
+	elseif q="siti" and σ = 'o' then return "sitio" 
+	*/
+	//Asumo que si hay más sitios sube y verifica otra vez sitio 
+	
+	//Reconoce TRANSICION después de un SITIO
+	elseif q="Exp" and σ = 't' then return "t"
+	elseif q="t" and σ = 'r' then return "tr"
+	elseif q="tr" and σ = 'a' then return "tra"
+	elseif q="tra" and σ = 'n' then return "tran"
+	elseif q="tran" and σ = 's' then return "trans"
+	elseif q="trans" and σ = 'i' then return "transi"
+	elseif q="transi" and σ = 'c' then return "transic"
+	elseif q="transic" and σ = 'i' then return "transici"
+	elseif q="transici" and σ = 'o' then return "transicio"
+	elseif q="transicio" and σ = 'n' then return "transicion"
+		
+	elseif q="transicion" and σ != '(' then return "Error"
+	elseif q="transicion" and σ = '(' then return "Parentesis"
+	elseif q="Parentesis" and σ ∈ ('a' ‥ 'z') then return "Nom" //Asumo que sube y mira Nom
+	elseif q="Nom" and σ = ',' then return "," 
+	//Tras la coma, procede a verificar si es EXPONENCIAL, UNIFORME o DETERMINISTICO
+	
+	//¿es EXPONENCIAL?
+	elseif q="," and σ = 'e' then return "e"
+	elseif q="e" and σ = 'x' then return "ex" 
+	elseif q="ex" and σ = 'p' then return "exp"
+	elseif q="exp" and σ = 'o' then return "expo"
+	elseif q="expo" and σ = 'n' then return "expon"
+	elseif q="expon" and σ = 'e' then return "expone"
+	elseif q="expone" and σ = 'n' then return "exponen"
+	elseif q="exponen" and σ = 'c' then return "exponenc"
+	elseif q="exponenc" and σ = 'i' then return "exponenci"
+	elseif q="exponenci" and σ = 'a' then return "exponencia"
+	elseif q="exponencia" and σ = 'l' then return "exponencial"
+	
+	
+	//¿es UNIFORME?
+	elseif q="," and σ = 'u' then return "u"
+	elseif q="u" and σ = 'n' then return "un"
+	elseif q="un" and σ = 'i' then return "uni"
+	elseif q="uni" and σ = 'f' then return "unif"
+	elseif q="unif" and σ = 'o' then return "unifo"
+	elseif q="unifo" and σ = 'r' then return "unifor"
+	elseif q="unifor" and σ = 'm' then return "uniform"
+	elseif q="uniform" and σ = 'e' then return "uniforme"
+	
+	
+	//¿es DETERMINISTICO?
+	elseif q="," and σ = 'd' then return "d"
+	elseif q="d" and σ = 'e' then return "de"
+	elseif q="de" and σ = 't' then return "det"
+	elseif q="det" and σ = 'e' then return "dete"
+	elseif q="dete" and σ = 'r' then return "deter"
+	elseif q="deter" and σ = 'm' then return "determ"
+	elseif q="determ" and σ = 'i' then return "determi"
+	elseif q="determi" and σ = 'n' then return "determin"
+	elseif q="determin" and σ = 'i' then return "determini"
+	elseif q="determini" and σ = 's' then return "determinis"
+	elseif q="determinis" and σ = 't' then return "determinist"
+	elseif q="determinist" and σ = 'i' then return "deterministi"
+	elseif q="deterministi" and σ = 'c' then return "deterministic"
+	elseif q="deterministic" and σ = 'o' then return "deterministico"
+		
+		
+	//Si es EXPONENCIAL‥.
+	elseif q="exponencial" and σ != ',' then return "Error"
+	elseif q="exponencial" and σ = ',' then return "Param"
+	elseif q="Param" and σ ∈ {('a' ‥ 'z'),('0' ‥ '9'),{'+','*','-','/'}} then return "Exp" 
+	elseif q="Exp" and σ = ',' then return "Params"
+	elseif q="Params" and σ ∈ {('a' ‥ 'z'),('0' ‥ '9'),{'+','*','-','/'}} then return "Exp" 
+	//Máximo 2 parámetros
+	elseif q = "Exp" and σ = ',' then return "Error"
+		
+	
+	//Si es UNIFORME‥.
+	elseif q="uniforme" and σ != ',' then return "Error"
+	elseif q="uniforme" and σ = ',' then return "Param"
+	/*elseif q="Param" and σ ∈ {('a' ‥ 'z'),('0' ‥ '9'),{'+','*','-','/'}} then return "Exp" 
+	elseif q="Exp" and σ = ',' then return "Params"
+	elseif q="Params" and σ ∈ {('a' ‥ 'z'),('0' ‥ '9'),{'+','*','-','/'}} then return "Exp" 
+	//Máximo 2 parámetros
+	elseif q = "Exp" and σ = ',' then return "Error"
+	*/
+		
+	//Si es DETERMINISTICO
+	elseif q="deterministico" and σ != ',' then return "Error"
+	elseif q="deterministico" and σ = ',' then return "Params"
+	/**elseif q="Params" and σ ∈ {('a' ‥ 'z'),('0' ‥ '9'),{'+','*','-','/'}} then return "Exp" 
+	//Máximo 1 parámetro
+	elseif q = "Exp" and σ = ',' then return "Error"
+	* 
+	*/
+	
+	//Si encuentra otra TRANSICION
+	//elseif q = "Exp" and σ = 't' then return "t"
+	/*
+	elseif q = "t" and σ = 'r' then return "tr"
+	elseif q = "tr" and σ = 'a' then return "tra"
+	elseif q = "tra" and σ = 'n' then return "tran"
+	elseif q = "tran" and σ = 's' then return "trans"
+	elseif q="trans" and σ = 'i' then return "transi"
+	elseif q="transi" and σ = 'c' then return "transic"
+	elseif q="transic" and σ = 'i' then return "transici"
+	elseif q="transici" and σ = 'o' then return "transicio"
+	elseif q="transicio" and σ = 'n' then return "transicion"
+	*/
+		
+	elseif q="transicion" and σ  ∈ ('a' ‥ 'z') then return "Exp" //voy a poner que retorne EXP para que no me ponga problema por el numero
+	
+	//Reconoce un ARCO después de una TRANSICION
+	elseif q="transicion" and σ = 'a' then return "a"
+	elseif q="a" and σ = 'r' then return "ar"
+	elseif q="ar" and σ = 'c' then return "arc"
+	elseif q="arc" and σ = 'o' then return "arco"
+		
+	elseif q="arco" and σ != '(' then return "Error"
+	elseif q="arco" and σ = '(' then return "Parentesis"
+	elseif q="Nom" and σ = ':' then return "Nom"
+	
+	elseif q = "Nom"  and σ = 'a' then return "a"
+	//Cuando encuentra otro arco declarado justo después
+	
+	//Reconoce FIN_RED después de haber declarado un ARCO
+	elseif q = "Nom" and σ = 'f' then return "f"
+	elseif q = "f" and σ = 'i' then return "fi"
+	elseif q = "fi" and σ = 'n' then return "fin"
+	elseif q = "fin" and σ = '_' then return "fin_"
+	elseif q = "fin_" and σ = 'r' then return "fin_r"
+	elseif q = "fin_r" and σ = 'e' then return "fin_re"
+	elseif q = "fin_re" and σ = 'd' then return "fin_red"
+	
+	else
+		return "Error"
+	end
+end
+
+
+function g(q) begin
+	return λ
+end
+
+function h(q,σ) begin
+var s: String
+s := λ
+
+if q ∉ {"Error"} then
+
+	  if σ ∉ {' '} then  s=String.valueOf(σ) end
+
+      if q=="p_red" then return 'P'
+      elseif q=="Nom" then return 'n'
+      elseif q == "Num" then return '#'
+      elseif q == "sitio" then return 'S'
+      elseif q == "capacidad" then return 'C'
+      elseif q == "marcacion_i" then return 'I'
+      elseif q == "transicion" then return 'T'
+      elseif q == "exponencial" then return 'X'
+      elseif q == "uniforme" then return 'U'
+      elseif q == "deterministico" then return 'D'
+      elseif q == "arco" then return 'A'
+      elseif q == "fin_red" then return 'F'
+      elseif q == "var" then return 'V'
+      elseif q == ":=" then return ':'
+      elseif q == "Exp" then return 'E'
+      	else return λ
+      end
+else return  λ
+end
+end
